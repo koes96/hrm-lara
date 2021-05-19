@@ -100,6 +100,7 @@
               class="btn btn-primary btn-sm radius-15"
               @click="deleteUser(user.id)"
             >
+              <!-- -->
               Delete User
             </button>
             <button
