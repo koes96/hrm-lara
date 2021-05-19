@@ -128,14 +128,6 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">Laravel Vue Js DataTable Example</div>
-                             
-                        <div class="card-body">
-                          <datatable-component></datatable-component>
-                        </div>
-                         
-                    </div>
                 </div>
             </div>
         </div>
