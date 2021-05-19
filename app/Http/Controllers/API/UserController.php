@@ -43,9 +43,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDatas(User $user)
+    public function getDatas()
     {
-        return request()->json(['data' => $user]);
+        return User::all();
     }
 
     /**

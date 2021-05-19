@@ -2214,6 +2214,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
  //import { ajaxFindCountry } from './countriesApi'
 // let ajaxFindCountry = "api/user/";
 
@@ -2248,9 +2250,9 @@ __webpack_require__.r(__webpack_exports__);
       sortOrders[column.name] = -1;
     });
     return {
-      // selectedCountries: [],
-      // countries: this.const,
-      // isLoading: false,
+      selectedCountries: [],
+      countries: {},
+      isLoading: false,
       users: [],
       columns: columns,
       sortKey: "created_at",
@@ -2281,29 +2283,11 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    // limitText(count) {
-    //   return `and ${count} other countries`;
-    // },
-    // asyncFind(query) {
-    //   this.isLoading = true;
-    //   ajaxFindCountry(query).then((response) => {
-    //     this.countries = response;
-    //     this.isLoading = false;
-    //   });
-    // },
+    limitText: function limitText(count) {
+      return "and ".concat(count, " other countries");
+    },
     clearAll: function clearAll() {
       this.selectedCountries = [];
-    },
-    getSelect2: function getSelect2() {
-      var _this2 = this;
-
-      axios.get("").then(function (response) {
-        console.log("The data: ", response.data);
-        _this2.users = response.data;
-        _this2.pagination.total = _this2.users.length;
-      })["catch"](function (errors) {
-        console.log(errors);
-      });
     },
     showModal: function showModal() {
       this.form.reset();
@@ -2314,18 +2298,18 @@ __webpack_require__.r(__webpack_exports__);
       $("#exampleModal").modal("hide");
     },
     simpandata: function simpandata() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.loading = true;
       this.disabled = true;
       this.form.post("api/user").then(function () {
         Fire.$emit("reloadUsers");
 
-        _this3.closeModal();
+        _this2.closeModal();
 
         Swal.fire("Created!", "Data is Saved", "success");
-        _this3.loading = false;
-        _this3.disabled = false;
+        _this2.loading = false;
+        _this2.disabled = false;
       })["catch"]();
     },
     edit: function edit(id, name, email, roleid) {
@@ -2366,7 +2350,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     alldeleteUser: function alldeleteUser() {
-      var _this4 = this;
+      var _this3 = this;
 
       Swal.fire({
         title: "Are you sure?",
@@ -2380,12 +2364,12 @@ __webpack_require__.r(__webpack_exports__);
         if (result.value) {
           //Send Request to server
           //   this.form.deleteuser('/users/${id}/delete')
-          axios.post("api/user/" + _this4.deleteItems).then(function () {
+          axios.post("api/user/" + _this3.deleteItems).then(function () {
             Fire.$emit("reloadUsers");
             Swal.fire("Deleted!", "User deleted successfully", "success"); // this.getUser();
 
-            _this4.deleteItems = [];
-            _this4.all_select == false; // ? (this.all_select = false)
+            _this3.deleteItems = [];
+            _this3.all_select == false; // ? (this.all_select = false)
             // : (this.all_select = true);
           })["catch"](function () {
             Swal.fire({
@@ -2399,12 +2383,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     select_all_via_check_box: function select_all_via_check_box() {
-      var _this5 = this;
+      var _this4 = this;
 
       if (this.all_select == false) {
         this.all_select = true;
         this.users.forEach(function (user) {
-          _this5.deleteItems.push(user.id);
+          _this4.deleteItems.push(user.id);
         });
       } else {
         this.all_select = false;
@@ -2415,16 +2399,20 @@ __webpack_require__.r(__webpack_exports__);
     //       this.getUser()
     //   },
     getUsers: function getUsers() {
-      var _this6 = this;
+      var _this5 = this;
 
       axios.get("api/user/", {
         params: this.tableShow
       }).then(function (response) {
         console.log("The data: ", response.data);
-        _this6.users = response.data;
-        _this6.pagination.total = _this6.users.length;
+        _this5.users = response.data;
+        _this5.pagination.total = _this5.users.length;
       })["catch"](function (errors) {
         console.log(errors);
+      });
+      axios.get("api/multiselect").then(function (_ref) {
+        var data = _ref.data;
+        return _this5.countries = data;
       });
     },
     paginate: function paginate(array, length, pageNumber) {
@@ -2452,14 +2440,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     filteredUsers: function filteredUsers() {
-      var _this7 = this;
+      var _this6 = this;
 
       var users = this.users;
 
       if (this.search) {
         users = users.filter(function (row) {
           return Object.keys(row).some(function (key) {
-            return String(row[key]).toLowerCase().indexOf(_this7.search.toLowerCase()) > -1;
+            return String(row[key]).toLowerCase().indexOf(_this6.search.toLowerCase()) > -1;
           });
         });
       }
@@ -2469,14 +2457,14 @@ __webpack_require__.r(__webpack_exports__);
 
       if (sortKey) {
         users = users.slice().sort(function (a, b) {
-          var index = _this7.getIndex(_this7.columns, "name", sortKey);
+          var index = _this6.getIndex(_this6.columns, "name", sortKey);
 
           a = String(a[sortKey]).toLowerCase();
           b = String(b[sortKey]).toLowerCase();
 
-          if (_this7.columns[index].type && _this7.columns[index].type === "date") {
+          if (_this6.columns[index].type && _this6.columns[index].type === "date") {
             return (a === b ? 0 : new Date(a).getTime() > new Date(b).getTime() ? 1 : -1) * order;
-          } else if (_this7.columns[index].type && _this7.columns[index].type === "number") {
+          } else if (_this6.columns[index].type && _this6.columns[index].type === "number") {
             return (+a === +b ? 0 : +a > +b ? 1 : -1) * order;
           } else {
             return (a === b ? 0 : a > b ? 1 : -1) * order;
@@ -42533,6 +42521,44 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "form-group" },
+        [
+          _c("multiselect", {
+            attrs: {
+              id: "ajax",
+              label: "name",
+              "track-by": "name",
+              placeholder: "Type to search",
+              "open-direction": "bottom",
+              options: _vm.countries,
+              multiple: true,
+              searchable: true,
+              loading: _vm.isLoading,
+              "internal-search": false,
+              "clear-on-select": false,
+              "close-on-select": false,
+              "options-limit": 15,
+              limit: 3,
+              "limit-text": _vm.limitText,
+              "max-height": 600,
+              "show-no-results": false,
+              "hide-selected": true
+            },
+            on: { "search-change": _vm.getUsers },
+            model: {
+              value: _vm.selectedCountries,
+              callback: function($$v) {
+                _vm.selectedCountries = $$v
+              },
+              expression: "selectedCountries"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
       _c("input", {
         directives: [
           {
@@ -43015,8 +43041,6 @@ var render = function() {
                 },
                 [
                   _c("div", { staticClass: "modal-body" }, [
-                    _c("div", { staticClass: "form-group" }),
-                    _vm._v(" "),
                     _c(
                       "div",
                       { staticClass: "form-group" },

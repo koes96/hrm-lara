@@ -23,3 +23,4 @@ Route::apiResources([
     'user' => UserController::class,
 ]);
 Route::post('user/{user}', [UserController::class, 'deletebanyak']);
+Route::get('multiselect', [UserController::class, 'getDatas']);

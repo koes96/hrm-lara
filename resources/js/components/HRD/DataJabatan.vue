@@ -13,6 +13,31 @@
           Add Data
         </button>
       </div>
+
+      <div class="form-group">
+        <multiselect
+          v-model="selectedCountries"
+          id="ajax"
+          label="name"
+          track-by="name"
+          placeholder="Type to search"
+          open-direction="bottom"
+          :options="countries"
+          :multiple="true"
+          :searchable="true"
+          :loading="isLoading"
+          :internal-search="false"
+          :clear-on-select="false"
+          :close-on-select="false"
+          :options-limit="15"
+          :limit="3"
+          :limit-text="limitText"
+          :max-height="600"
+          :show-no-results="false"
+          :hide-selected="true"
+          @search-change="getUsers"
+        ></multiselect>
+      </div>
       <input
         class="form-control input"
         type="text"
@@ -204,30 +229,6 @@
           >
             <div class="modal-body">
               <div class="form-group">
-                <!-- <multiselect
-                  v-model="selectedCountries"
-                  id="ajax"
-                  label="name"
-                  track-by="code"
-                  placeholder="Type to search"
-                  open-direction="bottom"
-                  :options="countries"
-                  :multiple="true"
-                  :searchable="true"
-                  :loading="isLoading"
-                  :internal-search="false"
-                  :clear-on-select="false"
-                  :close-on-select="false"
-                  :options-limit="300"
-                  :limit="3"
-                  :limit-text="limitText"
-                  :max-height="600"
-                  :show-no-results="false"
-                  :hide-selected="true"
-                  @search-change="asyncFind"
-                ></multiselect> -->
-              </div>
-              <div class="form-group">
                 <input
                   class="form-control"
                   v-model="form.name"
@@ -322,9 +323,9 @@ export default {
       sortOrders[column.name] = -1;
     });
     return {
-      // selectedCountries: [],
-      // countries: this.const,
-      // isLoading: false,
+      selectedCountries: [],
+      countries: {},
+      isLoading: false,
       users: [],
       columns: columns,
       sortKey: "created_at",
@@ -355,30 +356,11 @@ export default {
     };
   },
   methods: {
-    // limitText(count) {
-    //   return `and ${count} other countries`;
-    // },
-    // asyncFind(query) {
-    //   this.isLoading = true;
-    //   ajaxFindCountry(query).then((response) => {
-    //     this.countries = response;
-    //     this.isLoading = false;
-    //   });
-    // },
+    limitText(count) {
+      return `and ${count} other countries`;
+    },
     clearAll() {
       this.selectedCountries = [];
-    },
-    getSelect2() {
-      axios
-        .get("")
-        .then((response) => {
-          console.log("The data: ", response.data);
-          this.users = response.data;
-          this.pagination.total = this.users.length;
-        })
-        .catch((errors) => {
-          console.log(errors);
-        });
     },
     showModal() {
       this.form.reset();
@@ -504,6 +486,8 @@ export default {
         .catch((errors) => {
           console.log(errors);
         });
+
+      axios.get("api/multiselect").then(({ data }) => (this.countries = data));
     },
     paginate(array, length, pageNumber) {
       this.pagination.from = array.length ? (pageNumber - 1) * length + 1 : " ";
