@@ -21,7 +21,7 @@ class UserController extends Controller
             return User::orderBy('created_at', 'desc')->get();
         }
 
-        $colums = ['name', 'email', 'create_at', 'id'];
+        $colums = ['name', 'email', 'created_at', 'id'];
         $lenght = $request->input('length');
         $column = $request->input('column');
         $search_input = $request->input('search');
