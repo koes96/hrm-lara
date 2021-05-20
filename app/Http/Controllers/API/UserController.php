@@ -45,7 +45,7 @@ class UserController extends Controller
      */
     public function getDatas()
     {
-        return User::all();
+        return User::select('id','name')->get();
     }
 
     /**

@@ -70,15 +70,31 @@ class MenuAksesController extends Controller
         // if ($validator->fails()) {
         //     return response()->json($validator->errors(), 400);
         // }
+        foreach ($request->menu_id as $value) {
+            $menuid = $value['id'];
+        }
 
         $menuAkses::updateOrCreate(
             ['id' => $request->id],
             [
                 'id' => Str::uuid(),
-                'role_id' => $request->role_id,
-                'menu_id' => $request->menuid,
+                'role_id' => $request->role_id['id'],
+                'menu_id' => $menuid,
             ]
         );
+        // $countrole = count($request->role_id);
+        // $countmenu = count($request->menu_id);
+        // if ($countrole > 0) {
+        //     echo json_encode($request->role_id['id']);
+        // }
+        // $ar = array();
+        // if ($countmenu > 0) {
+        //     foreach ($request->menu_id as $value) {
+        //         $ar[] = $value;
+        // echo json_encode($ar[$i]);
+        //         var_dump($value['id']);
+        //         }
+        // }
     }
 
     /**

@@ -2818,6 +2818,14 @@ __webpack_require__.r(__webpack_exports__);
       sortOrders[column.name] = -1;
     });
     return {
+      Gudang: {
+        created_at: "2021-05-20T15:05:26.000000Z",
+        icon: "gudang",
+        id: "16d5e33a-b34d-442f-8631-8a1e879eeb01",
+        judul: "gudang",
+        menu: "Gudang",
+        updated_at: "2021-05-20T15:05:26.000000Z"
+      },
       selectedCountries: [],
       countries: {},
       selectedUsersss: [],
@@ -2869,6 +2877,9 @@ __webpack_require__.r(__webpack_exports__);
       this.form.reset();
       $("#exampleModal").modal("hide");
     },
+    // autoselect(value, id){
+    //   alert(value.name)
+    // },
     simpandata: function simpandata() {
       var _this2 = this;
 
@@ -2884,12 +2895,11 @@ __webpack_require__.r(__webpack_exports__);
         _this2.disabled = false;
       })["catch"]();
     },
-    edit: function edit(id, menu, judul, icon) {
+    edit: function edit(id, role_id, menu_id) {
       this.showModal();
       this.form.id = id;
-      this.form.menu = menu;
-      this.form.judul = judul;
-      this.form.icon = icon;
+      this.form.role_id = role_id;
+      this.form.menu_id = this.Gudang;
     },
     deleteData: function deleteData(id) {
       Swal.fire({
@@ -45609,7 +45619,6 @@ var render = function() {
                       [
                         _c("multiselect", {
                           attrs: {
-                            name: "role_id",
                             id: "ajax",
                             label: "name",
                             "track-by": "name",
@@ -45629,13 +45638,16 @@ var render = function() {
                             "show-no-results": false,
                             "hide-selected": true
                           },
-                          on: { "search-change": _vm.getUsersSelect },
+                          on: {
+                            "search-change": _vm.getUsersSelect,
+                            change: _vm.getUsersSelect
+                          },
                           model: {
-                            value: _vm.selectedUsersss,
+                            value: _vm.form.role_id,
                             callback: function($$v) {
-                              _vm.selectedUsersss = $$v
+                              _vm.$set(_vm.form, "role_id", $$v)
                             },
-                            expression: "selectedUsersss"
+                            expression: "form.role_id"
                           }
                         })
                       ],
@@ -45666,15 +45678,16 @@ var render = function() {
                             "limit-text": _vm.limitText,
                             "max-height": 600,
                             "show-no-results": false,
-                            "hide-selected": true
+                            "hide-selected": true,
+                            value: _vm.Gudang
                           },
                           on: { "search-change": _vm.getMenuSelect },
                           model: {
-                            value: _vm.selectedCountries,
+                            value: _vm.form.menu_id,
                             callback: function($$v) {
-                              _vm.selectedCountries = $$v
+                              _vm.$set(_vm.form, "menu_id", $$v)
                             },
-                            expression: "selectedCountries"
+                            expression: "form.menu_id"
                           }
                         })
                       ],

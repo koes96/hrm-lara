@@ -187,8 +187,7 @@
               </div>
               <div class="form-group">
                 <multiselect
-                  v-model="selectedUsersss"
-                  name="role_id"
+                  v-model="form.role_id"
                   id="ajax"
                   label="name"
                   track-by="name"
@@ -208,13 +207,13 @@
                   :show-no-results="false"
                   :hide-selected="true"
                   @search-change="getUsersSelect"
+                  @change="getUsersSelect"
                 >
                 </multiselect>
               </div>
-              <!-- <input v-model="form.role_id" v-bind:value="selectedUsersss.id" /> -->
               <div class="form-group">
                 <multiselect
-                  v-model="selectedCountries"
+                  v-model="form.menu_id"
                   name="menu_id"
                   id="ajax"
                   label="menu"
@@ -234,6 +233,7 @@
                   :max-height="600"
                   :show-no-results="false"
                   :hide-selected="true"
+                  :value="Gudang"
                   @search-change="getMenuSelect"
                 >
                 </multiselect>
@@ -284,6 +284,14 @@ export default {
       sortOrders[column.name] = -1;
     });
     return {
+      Gudang:{
+        created_at:"2021-05-20T15:05:26.000000Z",
+icon:"gudang",
+id:"16d5e33a-b34d-442f-8631-8a1e879eeb01",
+judul:"gudang",
+menu:"Gudang",
+updated_at:"2021-05-20T15:05:26.000000Z"
+      },
       selectedCountries: [],
       countries: {},
       selectedUsersss: [],
@@ -335,6 +343,10 @@ export default {
       this.form.reset();
       $("#exampleModal").modal("hide");
     },
+    // autoselect(value, id){
+    //   alert(value.name)
+
+    // },
     simpandata() {
       this.loading = true;
       this.disabled = true;
@@ -349,12 +361,11 @@ export default {
         })
         .catch();
     },
-    edit(id, menu, judul, icon) {
+    edit(id, role_id, menu_id) {
       this.showModal();
       this.form.id = id;
-      this.form.menu = menu;
-      this.form.judul = judul;
-      this.form.icon = icon;
+      this.form.role_id = role_id;
+      this.form.menu_id = this.Gudang;
     },
     deleteData(id) {
       Swal.fire({

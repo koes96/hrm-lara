@@ -13,9 +13,9 @@ class Updatesubmenu extends Migration
      */
     public function up()
     {
-        Schema::table('sub_menus', function ($table) {
-            $table->increments('role')->index();
-        });
+        // Schema::table('sub_menus', function ($table) {
+        //     $table->increments('role')->index();
+        // });
     }
 
     /**
@@ -25,8 +25,8 @@ class Updatesubmenu extends Migration
      */
     public function down()
     {
-        Schema::table('sub_menus', function ($table) {
-            $table->dropColumn('role');
-        });
+        // Schema::table('sub_menus', function ($table) {
+        //     $table->dropColumn('role');
+        // });
     }
 }
