@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\MenuMain;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class MenuMainController extends Controller
 {
@@ -12,9 +14,32 @@ class MenuMainController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->input('showdata')) {
+            return MenuMain::orderBy('id', 'desc')->get();
+        }
+
+        $colums = ['id', 'menu', 'judul', 'icon'];
+        $lenght = $request->input('length');
+        $column = $request->input('column');
+        $search_input = $request->input('search');
+
+        $query = MenuMain::select('id', 'menu', 'judul', 'icon')->orderBy($colums[$column]);
+
+        if ($search_input) {
+            $query->where(function ($query) use ($search_input) {
+                $query->where('id', 'like', '%' . $search_input . '%')->orwhere('menu', 'like', '%' . $search_input . '%')->orwhere('judul', 'like', '%' . $search_input . '%')->orwher('icon', 'like', '%' . $search_input . '%');
+            });
+        }
+
+        $users = $query->paginate($lenght);
+        return ['data' => $users];
+    }
+
+    public function getDatas()
+    {
+        return MenuMain::all();
     }
 
     /**
@@ -33,9 +58,43 @@ class MenuMainController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, MenuMain $menuMain)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'menu' => 'required|string|max:50',
+            'judul' => 'required|string|max:50',
+        ]);
+
+        //response error validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $menuMain::updateOrCreate(
+            ['id' => $request->id],
+            [
+                'id' => Str::uuid(),
+                'menu' => $request->menu,
+                'judul' => $request->judul,
+                'icon' => $request->icon,
+            ]
+        );
+
+        // $request->request->add(['id' => Str::uuid()]);
+        // MenuMain::created($request->all());
+
+        // $cek = $menuMain::find($request->id);
+        // if ($cek) {
+        //     $menuMain->created($request->all());
+        //     return response([
+        //         'Insert'
+        //     ]);
+        // } else {
+        //     $menuMain->save();
+        //     return response([
+        //         'Update'
+        //     ]);
+        // }
     }
 
     /**
@@ -67,9 +126,15 @@ class MenuMainController extends Controller
      * @param  \App\Models\MenuMain  $menuMain
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MenuMain $menuMain)
+    public function update(Request $request, MenuMain $menuMain, $id)
     {
-        //
+        $post = MenuMain::findOrFail($id);
+        if ($post) {
+            return response([
+                'Berhasil Menghapus Data111'
+            ]);
+        }
+        //$menuMain->update($request->all());
     }
 
     /**
@@ -78,8 +143,28 @@ class MenuMainController extends Controller
      * @param  \App\Models\MenuMain  $menuMain
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MenuMain $menuMain)
+    public function destroy($id)
     {
-        //
+        //mencari data sesuai $id
+        $post = MenuMain::findOrFail($id);
+
+        // jika data berhasil didelete maka tampilkan pesan json 
+        if ($post->delete()) {
+            return response([
+                'Berhasil Menghapus Data'
+            ]);
+        } else {
+            return response([
+                'Tidak Berhasil Menghapus Data'
+            ]);
+        }
+    }
+    public function deletebanyak($id)
+    {
+        $x = explode(',', $id);
+
+        foreach ($x as $value) {
+            MenuMain::findOrFail($value)->delete();
+        }
     }
 }

@@ -21,9 +21,6 @@ import {
   Vue.component(AlertErrors.name, AlertErrors)
   Vue.component(AlertSuccess.name, AlertSuccess)
 
-
-
-
 let Fire =new Vue();
 window.Fire = Fire;
 //Import Alert
@@ -44,7 +41,13 @@ Vue.use(VueRouter)
 // variable untuk vue router
     let routes =[
         { path: '/data-grade', component:require('./components/HRD/DataGrade.vue').default },
-        { path: '/data-jabatan', component:require('./components/HRD/DataJabatan.vue').default }
+        { path: '/data-jabatan', component:require('./components/HRD/DataJabatan.vue').default },
+
+        //Menu
+        { path: '/manage-akses-menu', component:require('./components/Menu/AksesMenu.vue').default },
+        { path: '/manage-main-menu', component:require('./components/Menu/MainMenu.vue').default },
+        { path: '/manage-sub-menu', component:require('./components/Menu/SubMenu.vue').default }
+        //*Menu*//
     ]
 
 

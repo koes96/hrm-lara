@@ -1,8 +1,5 @@
 <template>
   <div class="users-style">
-    <div style="margin-bottom: 20px">
-      <h2>Laravel and VueJS Datatable from Scratch</h2>
-    </div>
     <div class="table-style">
       <div class="card-tools">
         <button
@@ -14,49 +11,6 @@
         </button>
       </div>
 
-      <div class="form-group">
-        <multiselect
-          v-model="selectedCountries"
-          id="ajax"
-          label="name"
-          track-by="id"
-          placeholder="Type to search"
-          open-direction="bottom"
-          :options="countries"
-          :multiple="true"
-          :searchable="true"
-          :loading="isLoading"
-          :internal-search="true"
-          :clear-on-select="false"
-          :close-on-select="false"
-          :options-limit="5"
-          :limit="3"
-          :limit-text="limitText"
-          :max-height="600"
-          :show-no-results="false"
-          :hide-selected="true"
-          @search-change="getUsersSelect"
-        >
-          <!-- <template slot="tag" slot-scope="{ option, remove }"
-            ><span class="custom__tag"
-              ><span>{{ option.name }}</span
-              ><span class="custom__remove" @click="remove(option)"
-                >❌</span
-              ></span
-            ></template
-          >
-          <template slot="clear" slot-scope="props">
-            <div
-              class="multiselect__clear"
-              v-if="selectedCountries.length"
-              @mousedown.prevent.stop="clearAll(props.search)"
-            ></div>
-             </template
-          ><span slot="noResult"
-            >Oops! No elements found. Consider changing the search query.</span
-          > -->
-        </multiselect>
-      </div>
       <input
         class="form-control input"
         type="text"
@@ -66,19 +20,9 @@
         style="width: 250px"
       />
 
-      <button class="btn btn-primary btn-sm radius-15" @click="alldeleteUser">
-        Delete User
+      <button class="btn btn-primary btn-sm radius-15" @click="alldeleteDatas">
+        Delete Data
       </button>
-
-      <select
-        v-model="select"
-        class="form-control"
-        style="margin-bottom: 10px"
-        @change="alldeleteUser"
-      >
-        <option value="">Select</option>
-        <option value="">Delete All</option>
-      </select>
 
       <div class="control">
         <div class="select">
@@ -126,40 +70,32 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in paginatedUsers" :key="user.id">
+        <tr v-for="datax in paginatedDatas" :key="datax.id">
           <td>
             <input
               type="checkbox"
-              v-model="deleteItems"
-              :value="`${user.id}`"
+              v-model="deleteDatas"
+              :value="`${datax.id}`"
             />
           </td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.id }}</td>
-          <td>{{ user.created_at }}</td>
+          <td>{{ datax.id }}</td>
+          <td>{{ datax.menu }}</td>
+          <td>{{ datax.judul }}</td>
+          <td>{{ datax.icon }}</td>
           <td>
             <!-- <a class="btn btn-primary btn-sm radius-15" @click="deleteUser(user.id)">Delete User</a> -->
             <button
               class="btn btn-primary btn-sm radius-15"
-              @click="deleteUser(user.id)"
+              @click="deleteData(datax.id)"
             >
               <!-- -->
-              Delete User
+              Delete Datas
             </button>
             <button
               class="btn btn-info btn-sm radius-15"
-              @click="
-                edit(
-                  user.id,
-                  user.name,
-                  user.email,
-                  user.role_id,
-                  user.password
-                )
-              "
+              @click="edit(datax.id, datax.menu, datax.judul, datax.icon)"
             >
-              Edit User
+              Edit Data
             </button>
           </td>
         </tr>
@@ -195,7 +131,7 @@
       <nav class="pagination" v-else>
         <span class="page-stats">
           {{ pagination.from }} - {{ pagination.to }} of
-          {{ filteredUsers.length }}
+          {{ filteredDatas.length }}
           <span v-if="`filteredUsers.length < pagination.total`"></span>
         </span>
         <a
@@ -248,52 +184,34 @@
           >
             <div class="modal-body">
               <div class="form-group">
+                <input class="form-control" type="hidden" v-model="form.id" />
+              </div>
+              <div class="form-group">
                 <input
                   class="form-control"
-                  v-model="form.name"
                   type="text"
-                  name=""
-                  placeholder="Nama Pengguna"
-                  :class="{ 'is-invalid': form.errors.has('name') }"
+                  v-model="form.menu"
+                  placeholder="menu"
                 />
-                <has-error :form="form" field="name"></has-error>
+                <has-error :form="form" field="menu"></has-error>
               </div>
               <div class="form-group">
                 <input
                   class="form-control"
-                  type="email"
-                  v-model="form.email"
-                  placeholder="Email"
-                  :class="{ 'is-invalid': form.errors.has('email') }"
+                  type="text"
+                  v-model="form.judul"
+                  placeholder="judul"
                 />
-
-                <has-error :form="form" field="email"></has-error>
+                <has-error :form="form" field="judul"></has-error>
               </div>
               <div class="form-group">
                 <input
                   class="form-control"
-                  type="password"
-                  v-model="form.password"
-                  placeholder="Password"
+                  type="text"
+                  v-model="form.icon"
+                  placeholder="icon"
                 />
-              </div>
-              <div class="form-group">
-                <select
-                  class="form-control"
-                  v-model="form.role_id"
-                  :class="{ 'is-invalid': form.errors.has('role_id') }"
-                >
-                  <option value>Pilih Role</option>
-                  <!-- <option
-                    v-for="item in levels"
-                    :key="item.id"
-                    :value="item.id"
-                  >
-                    {{ item.role }}
-                  </option> -->
-                  <option value="1">Haha</option>
-                </select>
-                <has-error :form="form" field="role_id"></has-error>
+                <has-error :form="form" field="icon"></has-error>
               </div>
             </div>
             <div class="modal-footer">
@@ -325,34 +243,34 @@ import Multiselect from "vue-multiselect";
 export default {
   components: { Multiselect },
   created() {
-    this.getUsers();
-    Fire.$on("reloadUsers", () => {
-      this.getUsers();
+    this.getDatas();
+    Fire.$on("reloadDatas", () => {
+      this.getDatas();
     });
   },
   data() {
     let sortOrders = {};
     let columns = [
-      { label: "Name", name: "name" },
-      { label: "Email", name: "email" },
-      { label: "Date", name: "id" },
-      { label: "Date Added", name: "created_at" },
+      { label: "id", name: "id" },
+      { label: "menu", name: "menu" },
+      { label: "judul", name: "judul" },
+      { label: "icon", name: "icon" },
     ];
     columns.forEach((column) => {
       sortOrders[column.name] = -1;
     });
     return {
-      selectedCountries: [],
-      countries: {},
+      selectedmultidatas: [],
+      multidatas: {},
       isLoading: false,
-      users: [],
+      datas: [],
       columns: columns,
-      sortKey: "created_at",
+      sortKey: "id",
       sortOrders: sortOrders,
       length: 10,
       search: "",
       all_select: false,
-      deleteItems: [],
+      deleteDatas: [],
       select: "",
       tableShow: {
         showdata: true,
@@ -367,10 +285,10 @@ export default {
       },
       form: new Form({
         id: "",
-        name: "",
-        role_id: "",
-        email: "",
-        password: "",
+        menu: "",
+        judul: "",
+        title: "",
+        url: "",
       }),
     };
   },
@@ -379,7 +297,7 @@ export default {
       return `and ${count} other countries`;
     },
     clearAll() {
-      this.selectedCountries = [];
+      this.selectedmultidatas = [];
     },
     showModal() {
       this.form.reset();
@@ -389,13 +307,13 @@ export default {
       this.form.reset();
       $("#exampleModal").modal("hide");
     },
-    simpandata() {
+    updatedata(id) {
       this.loading = true;
       this.disabled = true;
       this.form
-        .post("api/user")
+        .patch("api/main-menu/" + id)
         .then(() => {
-          Fire.$emit("reloadUsers");
+          Fire.$emit("reloadDatas");
           this.closeModal();
           Swal.fire("Created!", "Data is Saved", "success");
           this.loading = false;
@@ -403,14 +321,28 @@ export default {
         })
         .catch();
     },
-    edit(id, name, email, roleid) {
+    simpandata() {
+      this.loading = true;
+      this.disabled = true;
+      this.form
+        .post("api/main-menu")
+        .then(() => {
+          Fire.$emit("reloadDatas");
+          this.closeModal();
+          Swal.fire("Created!", "Data is Saved", "success");
+          this.loading = false;
+          this.disabled = false;
+        })
+        .catch();
+    },
+    edit(id, menu, judul, icon) {
       this.showModal();
       this.form.id = id;
-      this.form.name = name;
-      this.form.email = email;
-      this.form.role_id = roleid;
+      this.form.menu = menu;
+      this.form.judul = judul;
+      this.form.icon = icon;
     },
-    deleteUser(id) {
+    deleteData(id) {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this! ",
@@ -421,17 +353,11 @@ export default {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.value) {
-          //Send Request to server
-          //   this.form.deleteuser('/users/${id}/delete')
           axios
-            .delete(`api/user/` + id)
+            .delete(`api/main-menu/` + id)
             .then(() => {
-              Fire.$emit("reloadUsers");
+              Fire.$emit("reloadDatas");
               Swal.fire("Deleted!", "User deleted successfully", "success");
-              // this.deleteUser();
-              // this.deleteItems = []
-              //       this.all_select == true ?
-              //            this.all_select = false : this.all_select = true;
             })
             .catch(() => {
               Swal.fire({
@@ -444,7 +370,7 @@ export default {
         }
       });
     },
-    alldeleteUser() {
+    alldeleteDatas() {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -455,18 +381,13 @@ export default {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.value) {
-          //Send Request to server
-          //   this.form.deleteuser('/users/${id}/delete')
           axios
-            .post(`api/user/` + this.deleteItems)
+            .post(`api/main-menu/` + this.deleteDatas)
             .then(() => {
-              Fire.$emit("reloadUsers");
+              Fire.$emit("reloadDatas");
               Swal.fire("Deleted!", "User deleted successfully", "success");
-              // this.getUser();
-              this.deleteItems = [];
+              this.deleteDatas = [];
               this.all_select == false;
-              // ? (this.all_select = false)
-              // : (this.all_select = true);
             })
             .catch(() => {
               Swal.fire({
@@ -482,36 +403,31 @@ export default {
     select_all_via_check_box() {
       if (this.all_select == false) {
         this.all_select = true;
-        this.users.forEach((user) => {
-          this.deleteItems.push(user.id);
+        this.datas.forEach((datas) => {
+          this.deleteDatas.push(datas.id);
         });
       } else {
         this.all_select = false;
-        this.deleteItems = [];
+        this.deleteDatas = [];
       }
     },
-    // 	created() {
-    //       this.getUser()
-    //   },
-    getUsersSelect() {
+    getDatasSelect() {
       this.isLoading = true;
-      axios.get("api/multiselect").then(({ data }) => (this.countries = data));
+      axios.get("api/multiselect").then(({ data }) => (this.data = data));
       this.isLoading = false;
     },
 
-    getUsers() {
+    getDatas() {
       axios
-        .get("api/user/", { params: this.tableShow })
+        .get("api/main-menu/", { params: this.tableShow })
         .then((response) => {
           console.log("The data: ", response.data);
-          this.users = response.data;
-          this.pagination.total = this.users.length;
+          this.datas = response.data;
+          this.pagination.total = this.datas.length;
         })
         .catch((errors) => {
           console.log(errors);
         });
-
-      axios.get("api/multiselect").then(({ data }) => (this.countries = data));
     },
     paginate(array, length, pageNumber) {
       this.pagination.from = array.length ? (pageNumber - 1) * length + 1 : " ";
@@ -538,10 +454,10 @@ export default {
   },
 
   computed: {
-    filteredUsers() {
-      let users = this.users;
+    filteredDatas() {
+      let datas = this.datas;
       if (this.search) {
-        users = users.filter((row) => {
+        datas = datas.filter((row) => {
           return Object.keys(row).some((key) => {
             return (
               String(row[key])
@@ -554,7 +470,7 @@ export default {
       let sortKey = this.sortKey;
       let order = this.sortOrders[sortKey] || 1;
       if (sortKey) {
-        users = users.slice().sort((a, b) => {
+        datas = datas.slice().sort((a, b) => {
           let index = this.getIndex(this.columns, "name", sortKey);
           a = String(a[sortKey]).toLowerCase();
           b = String(b[sortKey]).toLowerCase();
@@ -576,11 +492,11 @@ export default {
           }
         });
       }
-      return users;
+      return datas;
     },
-    paginatedUsers() {
+    paginatedDatas() {
       return this.paginate(
-        this.filteredUsers,
+        this.filteredDatas,
         this.length,
         this.pagination.currentPage
       );

@@ -34,6 +34,15 @@
 				</li>
 				<li> <router-link to="data-grade"><i class="bx bx-right-arrow-alt"></i>Grade</router-link>
 				</li>
+				</li>
+				<li> <router-link to="manage-akses-menu"><i class="bx bx-right-arrow-alt"></i>Akses Menu</router-link>
+				</li>
+				</li>
+				<li> <router-link to="manage-main-menu"><i class="bx bx-right-arrow-alt"></i>Main Menu</router-link>
+				</li>
+				</li>
+				<li> <router-link to="manage-sub-menu"><i class="bx bx-right-arrow-alt"></i>Sub Menu</router-link>
+				</li>
 				<li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Golongan</a>
 				</li>
 				<li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Peringatan</a>

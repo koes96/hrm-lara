@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\MenuAksesController;
+use App\Http\Controllers\MenuMainController;
+use App\Models\MenuMain;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +25,18 @@ use Illuminate\Support\Facades\Route;
 Route::apiResources([
     'user' => UserController::class,
 ]);
+Route::apiResources([
+    'akses-menu' => MenuAksesController::class,
+]);
+Route::apiResources([
+    'main-menu' => MenuMainController::class,
+]);
+
+//multi Delete
+Route::post('main-menu/{data}', [MenuMainController::class, 'deletebanyak']);
 Route::post('user/{user}', [UserController::class, 'deletebanyak']);
+
 Route::get('multiselect', [UserController::class, 'getDatas']);
+Route::get('multiakses', [MenuAksesController::class, 'getDatas']);
+Route::get('multimainmenu', [MenuMainController::class, 'getDatas']);
+//Route::get('akses-menu', [AksesController::class, 'getDatas']);

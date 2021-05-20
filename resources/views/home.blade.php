@@ -32,7 +32,6 @@
 <div  class="page-wrapper">
     <div class="page-content">
         <router-view></router-view>
-        <datatable-component></datatable-component>
     </div>
 </div>
 <!--end page wrapper -->
