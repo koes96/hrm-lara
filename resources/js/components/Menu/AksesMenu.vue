@@ -70,29 +70,37 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="datax in paginatedDatas" :key="datax.id">
+        <tr v-for="datax in paginatedDatas" :key="datax.idakses">
           <td>
             <input
               type="checkbox"
               v-model="deleteDatas"
-              :value="`${datax.id}`"
+              :value="`${datax.idakses}`"
             />
           </td>
-          <td>{{ datax.id }}</td>
-          <td>{{ datax.role_id }}</td>
-          <td>{{ datax.menu_id }}</td>
+          <td>{{ datax.idakses }}</td>
+          <td>{{ datax.name }}</td>
+          <td>{{ datax.menu }}</td>
           <td>
             <!-- <a class="btn btn-primary btn-sm radius-15" @click="deleteUser(user.id)">Delete User</a> -->
             <button
               class="btn btn-primary btn-sm radius-15"
-              @click="deleteData(datax.id)"
+              @click="deleteData(datax.idakses)"
             >
               <!-- -->
               Delete Datas
             </button>
             <button
               class="btn btn-info btn-sm radius-15"
-              @click="edit(datax.id, datax.role_id, datax.menu_id)"
+              @click="
+                edit(
+                  datax.idakses,
+                  (Namas.name = datax.name),
+                  (Namas.id = datax.iduser),
+                  (Gudang.id = datax.idmains),
+                  (Gudang.menu = datax.menu)
+                )
+              "
             >
               Edit Data
             </button>
@@ -284,13 +292,12 @@ export default {
       sortOrders[column.name] = -1;
     });
     return {
-      Gudang:{
-        created_at:"2021-05-20T15:05:26.000000Z",
-icon:"gudang",
-id:"16d5e33a-b34d-442f-8631-8a1e879eeb01",
-judul:"gudang",
-menu:"Gudang",
-updated_at:"2021-05-20T15:05:26.000000Z"
+      Namas: {
+        id: "",
+        name: "",
+      },
+      Gudang: {
+        menu: "",
       },
       selectedCountries: [],
       countries: {},
@@ -350,21 +357,34 @@ updated_at:"2021-05-20T15:05:26.000000Z"
     simpandata() {
       this.loading = true;
       this.disabled = true;
-      this.form
-        .post("api/akses-menu")
-        .then(() => {
-          Fire.$emit("reloadDatas");
-          this.closeModal();
-          Swal.fire("Created!", "Data is Saved", "success");
-          this.loading = false;
-          this.disabled = false;
-        })
-        .catch();
+      if (this.form.id == "") {
+        this.form
+          .post("api/akses-menu")
+          .then(() => {
+            Fire.$emit("reloadDatas");
+            this.closeModal();
+            Swal.fire("Created!", "Data is Saved", "success");
+            this.loading = true;
+            this.disabled = true;
+          })
+          .catch();
+      } else {
+        this.form
+          .put("api/akses-menu/" + this.form.id)
+          .then(() => {
+            Fire.$emit("reloadDatas");
+            this.closeModal();
+            Swal.fire("Update!", "Data is Update", "success");
+            this.loading = true;
+            this.disabled = true;
+          })
+          .catch();
+      }
     },
-    edit(id, role_id, menu_id) {
+    edit(id) {
       this.showModal();
       this.form.id = id;
-      this.form.role_id = role_id;
+      this.form.role_id = this.Namas;
       this.form.menu_id = this.Gudang;
     },
     deleteData(id) {

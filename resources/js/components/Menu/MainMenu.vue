@@ -287,8 +287,6 @@ export default {
         id: "",
         menu: "",
         judul: "",
-        title: "",
-        url: "",
       }),
     };
   },
@@ -324,16 +322,29 @@ export default {
     simpandata() {
       this.loading = true;
       this.disabled = true;
-      this.form
-        .post("api/main-menu")
-        .then(() => {
-          Fire.$emit("reloadDatas");
-          this.closeModal();
-          Swal.fire("Created!", "Data is Saved", "success");
-          this.loading = false;
-          this.disabled = false;
-        })
-        .catch();
+      if (this.form.id == "") {
+        this.form
+          .post("api/main-menu")
+          .then(() => {
+            Fire.$emit("reloadDatas");
+            this.closeModal();
+            Swal.fire("Created!", "Data is Saved", "success");
+            this.loading = true;
+            this.disabled = true;
+          })
+          .catch();
+      } else {
+        this.form
+          .put("api/main-menu/" + this.form.id)
+          .then(() => {
+            Fire.$emit("reloadDatas");
+            this.closeModal();
+            Swal.fire("Update!", "Data is Update", "success");
+            this.loading = true;
+            this.disabled = true;
+          })
+          .catch();
+      }
     },
     edit(id, menu, judul, icon) {
       this.showModal();
@@ -416,7 +427,6 @@ export default {
       axios.get("api/multiselect").then(({ data }) => (this.data = data));
       this.isLoading = false;
     },
-
     getDatas() {
       axios
         .get("api/main-menu/", { params: this.tableShow })

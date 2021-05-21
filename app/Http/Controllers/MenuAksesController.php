@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\MenuAkses;
+use App\Models\MenuMain;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -17,19 +19,28 @@ class MenuAksesController extends Controller
     public function index(Request $request)
     {
         if ($request->input('showdata')) {
-            return MenuAkses::orderBy('id', 'desc')->get();
+            $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name', 'menu_mains.id as idmains', 'menu_mains.menu', 'menu_mains.id')
+                ->join('users', 'users.id', '=', 'menu_akses.role_id')
+                ->join('menu_mains', 'menu_mains.id', '=', 'menu_akses.menu_id')
+                ->get();
+
+            return $querys;
         }
 
-        $colums = ['id', 'roleid', 'menuid'];
+        $colums = ['id', 'roleid', 'menuid',];
         $lenght = $request->input('length');
         $column = $request->input('column');
         $search_input = $request->input('search');
 
-        $query = MenuAkses::select('id', 'role_id', 'menuid')->orderBy($colums[$column]);
+        $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name', 'menu_mains.id as idmains', 'menu_mains.menu', 'menu_mains.id')
+            ->join('users', 'users.id', '=', 'menu_akses.role_id')
+            ->join('menu_mains', 'menu_mains.id', '=', 'menu_akses.menu_id')
+            ->orderBy($colums[$column])
+            ->get();
 
         if ($search_input) {
             $query->where(function ($query) use ($search_input) {
-                $query->where('id', 'like', '%' . $search_input . '%')->orwhere('role_id', 'like', '%' . $search_input . '%')->orwhere('menuid', 'like', '%' . $search_input . '%');
+                $query->where('menu_akses.id', 'like', '%' . $search_input . '%')->orwhere('menu_akses.role_id', 'like', '%' . $search_input . '%')->orwhere('menu_akses.menu_id', 'like', '%' . $search_input . '%');
             });
         }
 
@@ -40,6 +51,30 @@ class MenuAksesController extends Controller
     public function getDatas()
     {
         return MenuAkses::all();
+    }
+
+    public function cek(Request $request)
+    {
+        $x = array();
+        $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
+            ->join('users', 'users.id', '=', 'menu_akses.role_id')
+            ->get();
+        foreach ($query as $value) {
+            $exp = explode(",", $value->menu_id);
+            $c = count($exp);
+            // $value->ini = $exp;
+            for ($i = 0; $i < $c; $i++) {
+                if (!empty($exp[$i])) {
+                    $value->jml = $c;
+                    if ($value->jml > 1) {
+                        # code...
+                        $x = MenuMain::select('id', 'menu')->where('id', $exp[$i])->get();
+                    }
+                    $value->in = $x;
+                }
+            }
+        }
+        echo json_encode($query);
     }
 
     /**
@@ -71,15 +106,16 @@ class MenuAksesController extends Controller
         //     return response()->json($validator->errors(), 400);
         // }
         foreach ($request->menu_id as $value) {
-            $menuid = $value['id'];
+            $menuid[] = $value['id'];
         }
 
-        $menuAkses::updateOrCreate(
-            ['id' => $request->id],
+        $menu = implode(",", $menuid);
+
+        $menuAkses::Create(
             [
                 'id' => Str::uuid(),
                 'role_id' => $request->role_id['id'],
-                'menu_id' => $menuid,
+                'menu_id' => $menu,
             ]
         );
         // $countrole = count($request->role_id);
@@ -126,42 +162,35 @@ class MenuAksesController extends Controller
      * @param  \App\Models\MenuAkses  $menuAkses
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MenuAkses $menuAkses)
+    public function update(Request $request, MenuAkses $menuAkses, $id)
     {
         //set validation
-        $validator = Validator::make($request->all(), [
-            'role_id'   => 'required',
-            'menuid' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'role_id'   => 'required',
+        //     'menu_id' => 'required',
+        // ]);
 
-        //response error validation
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        // //response error validation
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors(), 400);
+        // }
+
+        foreach ($request->menu_id as $value) {
+            $menuid[] = $value['id'];
         }
+
+        $menu = implode(",", $menuid);
+        // echo json_encode($menuid);
 
         //find user by ID
-        $user = MenuAkses::findOrFail($menuAkses->id);
+        $post = MenuAkses::findOrFail($id);
+        if ($post) {
+            $menuAkses->where('id', $id)->update([
+                'role_id' => $request->role_id['id'],
+                'menu_id' => $menu
 
-        if ($user) {
-
-            //update user
-            $user->update([
-                'title'     => $request->title,
-                'content'   => $request->content
             ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'user Updated',
-                'data'    => $user
-            ], 200);
         }
-
-        //data user not found
-        return response()->json([
-            'success' => false,
-            'message' => 'user Not Found',
-        ], 404);
     }
 
     /**

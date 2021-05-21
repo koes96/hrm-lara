@@ -2787,6 +2787,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
  //import { ajaxFindCountry } from './countriesApi'
 // let ajaxFindCountry = "api/user/";
 
@@ -2818,13 +2826,12 @@ __webpack_require__.r(__webpack_exports__);
       sortOrders[column.name] = -1;
     });
     return {
+      Namas: {
+        id: "",
+        name: ""
+      },
       Gudang: {
-        created_at: "2021-05-20T15:05:26.000000Z",
-        icon: "gudang",
-        id: "16d5e33a-b34d-442f-8631-8a1e879eeb01",
-        judul: "gudang",
-        menu: "Gudang",
-        updated_at: "2021-05-20T15:05:26.000000Z"
+        menu: ""
       },
       selectedCountries: [],
       countries: {},
@@ -2885,20 +2892,33 @@ __webpack_require__.r(__webpack_exports__);
 
       this.loading = true;
       this.disabled = true;
-      this.form.post("api/akses-menu").then(function () {
-        Fire.$emit("reloadDatas");
 
-        _this2.closeModal();
+      if (this.form.id == "") {
+        this.form.post("api/akses-menu").then(function () {
+          Fire.$emit("reloadDatas");
 
-        Swal.fire("Created!", "Data is Saved", "success");
-        _this2.loading = false;
-        _this2.disabled = false;
-      })["catch"]();
+          _this2.closeModal();
+
+          Swal.fire("Created!", "Data is Saved", "success");
+          _this2.loading = true;
+          _this2.disabled = true;
+        })["catch"]();
+      } else {
+        this.form.put("api/akses-menu/" + this.form.id).then(function () {
+          Fire.$emit("reloadDatas");
+
+          _this2.closeModal();
+
+          Swal.fire("Update!", "Data is Update", "success");
+          _this2.loading = true;
+          _this2.disabled = true;
+        })["catch"]();
+      }
     },
-    edit: function edit(id, role_id, menu_id) {
+    edit: function edit(id) {
       this.showModal();
       this.form.id = id;
-      this.form.role_id = role_id;
+      this.form.role_id = this.Namas;
       this.form.menu_id = this.Gudang;
     },
     deleteData: function deleteData(id) {
@@ -3387,9 +3407,7 @@ __webpack_require__.r(__webpack_exports__);
       form: new Form({
         id: "",
         menu: "",
-        judul: "",
-        title: "",
-        url: ""
+        judul: ""
       })
     };
   },
@@ -3428,15 +3446,28 @@ __webpack_require__.r(__webpack_exports__);
 
       this.loading = true;
       this.disabled = true;
-      this.form.post("api/main-menu").then(function () {
-        Fire.$emit("reloadDatas");
 
-        _this3.closeModal();
+      if (this.form.id == "") {
+        this.form.post("api/main-menu").then(function () {
+          Fire.$emit("reloadDatas");
 
-        Swal.fire("Created!", "Data is Saved", "success");
-        _this3.loading = false;
-        _this3.disabled = false;
-      })["catch"]();
+          _this3.closeModal();
+
+          Swal.fire("Created!", "Data is Saved", "success");
+          _this3.loading = true;
+          _this3.disabled = true;
+        })["catch"]();
+      } else {
+        this.form.put("api/main-menu/" + this.form.id).then(function () {
+          Fire.$emit("reloadDatas");
+
+          _this3.closeModal();
+
+          Swal.fire("Update!", "Data is Update", "success");
+          _this3.loading = true;
+          _this3.disabled = true;
+        })["catch"]();
+      }
     },
     edit: function edit(id, menu, judul, icon) {
       this.showModal();
@@ -45325,7 +45356,7 @@ var render = function() {
       _c(
         "tbody",
         _vm._l(_vm.paginatedDatas, function(datax) {
-          return _c("tr", { key: datax.id }, [
+          return _c("tr", { key: datax.idakses }, [
             _c("td", [
               _c("input", {
                 directives: [
@@ -45338,9 +45369,9 @@ var render = function() {
                 ],
                 attrs: { type: "checkbox" },
                 domProps: {
-                  value: "" + datax.id,
+                  value: "" + datax.idakses,
                   checked: Array.isArray(_vm.deleteDatas)
-                    ? _vm._i(_vm.deleteDatas, "" + datax.id) > -1
+                    ? _vm._i(_vm.deleteDatas, "" + datax.idakses) > -1
                     : _vm.deleteDatas
                 },
                 on: {
@@ -45349,7 +45380,7 @@ var render = function() {
                       $$el = $event.target,
                       $$c = $$el.checked ? true : false
                     if (Array.isArray($$a)) {
-                      var $$v = "" + datax.id,
+                      var $$v = "" + datax.idakses,
                         $$i = _vm._i($$a, $$v)
                       if ($$el.checked) {
                         $$i < 0 && (_vm.deleteDatas = $$a.concat([$$v]))
@@ -45367,11 +45398,11 @@ var render = function() {
               })
             ]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(datax.id))]),
+            _c("td", [_vm._v(_vm._s(datax.idakses))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(datax.role_id))]),
+            _c("td", [_vm._v(_vm._s(datax.name))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(datax.menu_id))]),
+            _c("td", [_vm._v(_vm._s(datax.menu))]),
             _vm._v(" "),
             _c("td", [
               _c(
@@ -45380,7 +45411,7 @@ var render = function() {
                   staticClass: "btn btn-primary btn-sm radius-15",
                   on: {
                     click: function($event) {
-                      return _vm.deleteData(datax.id)
+                      return _vm.deleteData(datax.idakses)
                     }
                   }
                 },
@@ -45393,7 +45424,13 @@ var render = function() {
                   staticClass: "btn btn-info btn-sm radius-15",
                   on: {
                     click: function($event) {
-                      return _vm.edit(datax.id, datax.role_id, datax.menu_id)
+                      _vm.edit(
+                        datax.idakses,
+                        (_vm.Namas.name = datax.name),
+                        (_vm.Namas.id = datax.iduser),
+                        (_vm.Gudang.id = datax.idmains),
+                        (_vm.Gudang.menu = datax.menu)
+                      )
                     }
                   }
                 },

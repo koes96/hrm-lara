@@ -70,8 +70,7 @@ class MenuMainController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        $menuMain::updateOrCreate(
-            ['id' => $request->id],
+        $menuMain::Create(
             [
                 'id' => Str::uuid(),
                 'menu' => $request->menu,
@@ -82,19 +81,6 @@ class MenuMainController extends Controller
 
         // $request->request->add(['id' => Str::uuid()]);
         // MenuMain::created($request->all());
-
-        // $cek = $menuMain::find($request->id);
-        // if ($cek) {
-        //     $menuMain->created($request->all());
-        //     return response([
-        //         'Insert'
-        //     ]);
-        // } else {
-        //     $menuMain->save();
-        //     return response([
-        //         'Update'
-        //     ]);
-        // }
     }
 
     /**
@@ -128,13 +114,20 @@ class MenuMainController extends Controller
      */
     public function update(Request $request, MenuMain $menuMain, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'menu' => 'required|string|max:50',
+            'judul' => 'required|string|max:50',
+        ]);
+
+        //response error validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
         $post = MenuMain::findOrFail($id);
         if ($post) {
-            return response([
-                'Berhasil Menghapus Data111'
-            ]);
+            $menuMain->where('id', $id)->update($request->all());
         }
-        //$menuMain->update($request->all());
     }
 
     /**
