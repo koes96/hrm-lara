@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class MenuAksesController extends Controller
 {
@@ -16,6 +17,7 @@ class MenuAksesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request)
     {
         if ($request->input('showdata')) {
@@ -56,24 +58,9 @@ class MenuAksesController extends Controller
     public function cek(Request $request)
     {
         $x = array();
-        $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
-            ->join('users', 'users.id', '=', 'menu_akses.role_id')
+        // $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
+        $query = DB::table('menu_akses')->join('users', 'users.id', '=', 'menu_akses.role_id')
             ->get();
-        foreach ($query as $value) {
-            $exp = explode(",", $value->menu_id);
-            $c = count($exp);
-            // $value->ini = $exp;
-            for ($i = 0; $i < $c; $i++) {
-                if (!empty($exp[$i])) {
-                    $value->jml = $c;
-                    if ($value->jml > 1) {
-                        # code...
-                        $x = MenuMain::select('id', 'menu')->where('id', $exp[$i])->get();
-                    }
-                    $value->in = $x;
-                }
-            }
-        }
         echo json_encode($query);
     }
 

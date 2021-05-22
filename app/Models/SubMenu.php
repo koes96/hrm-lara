@@ -17,5 +17,5 @@ class SubMenu extends Model
     ];
 
     protected $keyType = 'string';
-    //public $incrementing = false;
+    public $incrementing = false;
 }

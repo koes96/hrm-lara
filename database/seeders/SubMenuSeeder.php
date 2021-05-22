@@ -14,19 +14,19 @@ class SubMenuSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('sub_menus')->insert([
-            [
-                'id' => 'ini-id-menu-1',
-                'menu_id' => 'ini-menu-id-1',
-                'title' => 'Jabatan',
-                'url' => 'data-jabatan'
-            ],
-            [
-                'id' => 'ini-id-menu-2',
-                'menu_id' => 'ini-menu-id-2',
-                'title' => 'Grade',
-                'url' => 'data-grade'
-            ],
-        ]);
+        // DB::table('sub_menus')->insert([
+        //     [
+        //         'id' => 'ini-id-menu-1',
+        //         'menu_id' => 'ini-menu-id-1',
+        //         'title' => 'Jabatan',
+        //         'url' => 'data-jabatan'
+        //     ],
+        //     [
+        //         'id' => 'ini-id-menu-2',
+        //         'menu_id' => 'ini-menu-id-2',
+        //         'title' => 'Grade',
+        //         'url' => 'data-grade'
+        //     ],
+        // ]);
     }
 }
