@@ -10,7 +10,7 @@
           class="btn btn-primary btn-sm radius-10 mb-1"
           @click="showModal"
         >
-          Add Data
+          Add Data sub menu
         </button>
       </div>
 
