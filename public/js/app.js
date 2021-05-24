@@ -46471,7 +46471,7 @@ var render = function() {
             attrs: { type: "button" },
             on: { click: _vm.showModal }
           },
-          [_vm._v("\n        Add Data sub menu\n      ")]
+          [_vm._v("\n        Add Data\n      ")]
         )
       ]),
       _vm._v(" "),
