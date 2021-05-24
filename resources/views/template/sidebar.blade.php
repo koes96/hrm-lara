@@ -17,7 +17,7 @@
 			<a href="#">
 				<div class="parent-icon"><i class='bx bx-home-circle'></i>
 				</div>
-				<div class="menu-title">Dashboard {{Auth::User()->id}} </div>
+				<div class="menu-title">Dashboard </div>
 			</a>
 		</li>
 		<li class="menu-label">Core Human Resources</li>
