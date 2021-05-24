@@ -23,7 +23,7 @@ class MenuAksesController extends Controller
     {
         if ($request->input('showdata')) {
             $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
-                ->join('users', 'users.name', '=', 'menu_akses.role_id')
+                ->join('users', 'users.id', '=', 'menu_akses.role_id')
                 ->get();
 
             foreach ($querys as $key => $value) {
@@ -75,11 +75,10 @@ class MenuAksesController extends Controller
         return MenuAkses::all();
     }
 
-    public function cek(Request $request)
+    public function cek()
     {
-        $x = array();
         $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
-            ->join('users', 'users.name', '=', 'menu_akses.role_id')
+            ->join('users', 'users.id', '=', 'menu_akses.role_id')
             ->get();
         foreach ($querys as $key => $value) {
             $exp = explode(",", $value->menu_id);
@@ -121,9 +120,9 @@ class MenuAksesController extends Controller
     public function store(Request $request, MenuAkses $menuAkses)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required|string|max:50',
-            'role_id' => 'required|string|max:50',
-            'menuid' => 'required|string|max:50',
+            // 'id' => 'required|string|max:50',
+            // 'role_id' => 'required|string|max:50',
+            // 'menu_id' => 'required|string|max:50',
         ]);
 
         //response error validation
@@ -138,7 +137,7 @@ class MenuAksesController extends Controller
         $menuAkses::Create(
             [
                 'id' => Str::uuid(),
-                'role_id' => $request->role_id['name'],
+                'role_id' => $request->role_id['id'],
                 'menu_id' => $menu,
             ]
         );

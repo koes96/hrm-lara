@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             [
                 'id' => Str::uuid(),
                 'role_id' => '2',
-                'email' => 'admin@gmail.com',
+                'email' => 'admin2@gmail.com',
                 'password' => Hash::make('admin1234'),
                 'name' => 'admin1234'
             ]

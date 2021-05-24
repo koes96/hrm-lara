@@ -12,14 +12,12 @@
 	</div>
 	<!--navigation-->
 
-
-
 	<ul class="metismenu" id="menu">
 		<li>
 			<a href="#">
 				<div class="parent-icon"><i class='bx bx-home-circle'></i>
 				</div>
-				<div class="menu-title">Dashboard </div>
+				<div class="menu-title">Dashboard {{Auth::User()->id}} </div>
 			</a>
 		</li>
 		<li class="menu-label">Core Human Resources</li>
@@ -55,22 +53,29 @@
 				</li>
 			</ul>
 		</li>
-		{{-- @foreach ($akses as $v)
-		<li class="menu-label">{{$v->judul}}</li>
+		@foreach ($menu as $v)
+		@foreach ($v->menu_id as $item)
+		@foreach ($item as $ite)
+			
+		<li class="menu-label">{{ $ite->menu}}</li>
 		<li>
 			<a href="javascript:;" class="has-arrow">
 				<div class="parent-icon"><i class='bx bx-cart'></i>
 				</div>
-				<div class="menu-title">{{$v->menu}}</div>
+				<div class="menu-title">{{$ite->menu}}</div>
 			</a>
+		@foreach ($ite->submenu as $it)
 			<ul>
-				@foreach ($sub as $va)
-				<li> <a href="{{$va->url}}"><i class="bx bx-right-arrow-alt"></i>{{$va->title}}</a>
+				{{-- @foreach ($sub as $va) --}}
+				<li> <router-link to={{$it->url}}><i class="bx bx-right-arrow-alt"></i>{{$it->title}}</router-link>
 				</li>
-				@endforeach
+				{{-- @endforeach --}}
 			</ul>
-		</li>
-		@endforeach --}}
+			@endforeach
+		</li> 
+			@endforeach
+			@endforeach
+			@endforeach
 	</ul>
 	<!--end navigation-->
 </div>
