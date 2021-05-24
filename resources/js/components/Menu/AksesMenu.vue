@@ -80,7 +80,7 @@
           </td>
           <td>{{ datax.idakses }}</td>
           <td>{{ datax.name }}</td>
-          <td>{{ datax.menu }}</td>
+          <td>{{ datax.menu_id }}</td>
           <td>
             <!-- <a class="btn btn-primary btn-sm radius-15" @click="deleteUser(user.id)">Delete User</a> -->
             <button

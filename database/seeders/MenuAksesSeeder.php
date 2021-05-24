@@ -14,17 +14,17 @@ class MenuAksesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('menu_akses')->insert([
-            [
-                'id' => 'ini-id-menu-akses-1',
-                'role_id' => '2',
-                'menu_id' => 'ini-id-menu-main-1'
-            ],
-            [
-                'id' => 'ini-id-menu-akses-2',
-                'role_id' => '2',
-                'menu_id' => 'ini-id-menu-main-1',
-            ],
-        ]);
+        // DB::table('menu_akses')->insert([
+        //     [
+        //         'id' => 'ini-id-menu-akses-1',
+        //         'role_id' => '2',
+        //         'menu_id' => 'ini-id-menu-main-1'
+        //     ],
+        //     [
+        //         'id' => 'ini-id-menu-akses-2',
+        //         'role_id' => '2',
+        //         'menu_id' => 'ini-id-menu-main-1',
+        //     ],
+        // ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,7 +46,50 @@ class UserController extends Controller
      */
     public function getDatas()
     {
-        return User::select('id','name')->get();
+        // return User::select('id','name')->get();
+        $users = DB::table('users')
+            ->select('name', 'id')
+            ->get();
+
+        return $users;
+    }
+    public function getDatas2()
+    {
+        // return User::select('id','name')->get();
+        $users = DB::table('users')
+            ->join('menu_akses', 'users.id', '=', 'menu_akses.role_id')
+            // ->join('orders', 'users.id', '=', 'orders.user_id')
+            ->select('users.*', 'menu_akses.menu_id')
+            ->get();
+
+        foreach ($users as $key => $value) {
+            $ep = explode(",", $value->menu_id);
+            $c = count($ep);
+
+            if ($c > 1) {
+                for ($i = 0; $i < $c; $i++) {
+                    $dbx = DB::table('menu_mains')->select('id', 'menu')->where('id', $ep[$i])->get();
+                    $x[] = $dbx;
+                }
+            } else {
+                $dbx = DB::table('menu_mains')->select('id', 'menu')->where('id', $ep)->get();
+                $x = $dbx;
+            }
+
+            $value->menus = $x;
+        }
+
+        foreach ($users as $key => $value) {
+            foreach ($value->menus as $key1 => $valu) {
+                foreach ($valu as $key2 => $val) {
+                    $final = $val;
+                    // dd($val);
+                }
+            }
+            # code...
+        }
+
+        return $users;
     }
 
     /**

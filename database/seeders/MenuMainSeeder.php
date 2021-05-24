@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class MenuMainSeeder extends Seeder
 {
@@ -16,16 +17,16 @@ class MenuMainSeeder extends Seeder
     {
         DB::table('menu_mains')->insert([
             [
-                'id' => 'ini-id-menu-main-1',
-                'menu' => 'ini-id-menu-1',
-                'judul' => 'Jabatan Judul',
-                'icon' => 'data-jabatan'
+                'id' => Str::uuid(),
+                'menu' => 'Pegawai',
+                'judul' => 'pegawai',
+                'icon' => 'icon'
             ],
             [
-                'id' => 'ini-id-menu-main-2',
-                'menu' => 'ini-id-menu-2',
-                'judul' => 'Grade Judul',
-                'icon' => 'data-grade'
+                'id' => Str::uuid(),
+                'menu' => 'Admin',
+                'judul' => 'admin',
+                'icon' => 'icon'
             ],
         ]);
     }

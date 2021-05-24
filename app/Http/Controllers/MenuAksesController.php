@@ -19,10 +19,29 @@ class MenuAksesController extends Controller
     public function index(Request $request)
     {
         if ($request->input('showdata')) {
-            $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name', 'menu_mains.id as idmains', 'menu_mains.menu', 'menu_mains.id')
-                ->join('users', 'users.id', '=', 'menu_akses.role_id')
-                ->join('menu_mains', 'menu_mains.id', '=', 'menu_akses.menu_id')
+            $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
+                ->join('users', 'users.name', '=', 'menu_akses.role_id')
                 ->get();
+
+            foreach ($querys as $key => $value) {
+                $exp = explode(",", $value->menu_id);
+                $c = count($exp);
+                // $value->menus = ['jml' => $c, 'hasil' => $exp];
+
+                $data = null;
+                for ($i = 0; $i < $c; $i++) {
+                    $data[] = MenuMain::select('id', 'menu')->where('id', $exp[$i])->get();
+                }
+                $value->menu_id = $data;
+            }
+            foreach ($querys as $key1 => $value1) {
+                foreach ($value1->menu_id as $key2 => $value2) {
+                    foreach ($value2 as $key3 => $value3) {
+                        $value3->submenu = MenuMain::select('id', 'menu')->where('id', $value3->id)->get();
+                    }
+                }
+            }
+            // echo json_encode($querys);
 
             return $querys;
         }
@@ -56,25 +75,28 @@ class MenuAksesController extends Controller
     public function cek(Request $request)
     {
         $x = array();
-        $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
-            ->join('users', 'users.id', '=', 'menu_akses.role_id')
+        $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
+            ->join('users', 'users.name', '=', 'menu_akses.role_id')
             ->get();
-        foreach ($query as $value) {
+        foreach ($querys as $key => $value) {
             $exp = explode(",", $value->menu_id);
             $c = count($exp);
-            // $value->ini = $exp;
+            // $value->menus = ['jml' => $c, 'hasil' => $exp];
+
+            $data = null;
             for ($i = 0; $i < $c; $i++) {
-                if (!empty($exp[$i])) {
-                    $value->jml = $c;
-                    if ($value->jml > 1) {
-                        # code...
-                        $x = MenuMain::select('id', 'menu')->where('id', $exp[$i])->get();
-                    }
-                    $value->in = $x;
+                $data[] = MenuMain::select('id', 'menu')->where('id', $exp[$i])->get();
+            }
+            $value->menu_id = $data;
+        }
+        foreach ($querys as $key1 => $value1) {
+            foreach ($value1->menu_id as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    $value3->submenu = MenuMain::select('id', 'menu')->where('id', $value3->id)->get();
                 }
             }
         }
-        echo json_encode($query);
+        echo json_encode($querys);
     }
 
     /**
@@ -95,42 +117,28 @@ class MenuAksesController extends Controller
      */
     public function store(Request $request, MenuAkses $menuAkses)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'id' => 'required|string|max:50',
-        //     'role_id' => 'required|string|max:50',
-        //     'menuid' => 'required|string|max:50',
-        // ]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|string|max:50',
+            'role_id' => 'required|string|max:50',
+            'menuid' => 'required|string|max:50',
+        ]);
 
-        // //response error validation
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 400);
-        // }
-        foreach ($request->menu_id as $value) {
+        //response error validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        foreach ($request->menu_id as $key => $value) {
             $menuid[] = $value['id'];
         }
-
         $menu = implode(",", $menuid);
 
         $menuAkses::Create(
             [
                 'id' => Str::uuid(),
-                'role_id' => $request->role_id['id'],
+                'role_id' => $request->role_id['name'],
                 'menu_id' => $menu,
             ]
         );
-        // $countrole = count($request->role_id);
-        // $countmenu = count($request->menu_id);
-        // if ($countrole > 0) {
-        //     echo json_encode($request->role_id['id']);
-        // }
-        // $ar = array();
-        // if ($countmenu > 0) {
-        //     foreach ($request->menu_id as $value) {
-        //         $ar[] = $value;
-        // echo json_encode($ar[$i]);
-        //         var_dump($value['id']);
-        //         }
-        // }
     }
 
     /**

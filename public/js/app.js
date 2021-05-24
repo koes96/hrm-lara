@@ -3911,6 +3911,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
  //import { ajaxFindCountry } from './countriesApi'
 // let ajaxFindCountry = "api/user/";
 
@@ -3932,16 +3955,18 @@ __webpack_require__.r(__webpack_exports__);
       label: "id",
       name: "id"
     }, {
-      label: "roleid",
-      name: "roleid"
+      label: "title",
+      name: "title"
     }, {
-      label: "menuid",
-      name: "menuid"
+      label: "url",
+      name: "url"
     }];
     columns.forEach(function (column) {
       sortOrders[column.name] = -1;
     });
     return {
+      selectedcountries: [],
+      countries: {},
       selectedmultidatas: [],
       multidatas: {},
       isLoading: false,
@@ -3967,8 +3992,9 @@ __webpack_require__.r(__webpack_exports__);
       },
       form: new Form({
         id: "",
-        roleid: "",
-        menuid: ""
+        menuid: "",
+        title: "",
+        url: ""
       })
     };
   },
@@ -4075,22 +4101,31 @@ __webpack_require__.r(__webpack_exports__);
         this.deleteItems = [];
       }
     },
-    // getDatasSelect() {
-    //   this.isLoading = true;
-    //   axios.get("api/multiselect").then(({ data }) => (this.data = data));
-    //   this.isLoading = false;
-    // },
-    getDatas: function getDatas() {
+    getMenuSelect: function getMenuSelect() {
       var _this5 = this;
+
+      this.isLoading = true;
+      axios.get("api/multimainmenu").then(function (_ref) {
+        var data = _ref.data;
+        return _this5.countries = data;
+      });
+      this.isLoading = false;
+    },
+    getDatas: function getDatas() {
+      var _this6 = this;
 
       axios.get("api/akses-menu/", {
         params: this.tableShow
       }).then(function (response) {
         console.log("The data: ", response.data);
-        _this5.datas = response.data;
-        _this5.pagination.total = _this5.datas.length;
+        _this6.datas = response.data;
+        _this6.pagination.total = _this6.datas.length;
       })["catch"](function (errors) {
         console.log(errors);
+      });
+      axios.get("api/multimainmenu").then(function (_ref2) {
+        var data = _ref2.data;
+        return _this6.countries = data;
       });
     },
     paginate: function paginate(array, length, pageNumber) {
@@ -4118,14 +4153,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     filteredDatas: function filteredDatas() {
-      var _this6 = this;
+      var _this7 = this;
 
       var datas = this.datas;
 
       if (this.search) {
         datas = datas.filter(function (row) {
           return Object.keys(row).some(function (key) {
-            return String(row[key]).toLowerCase().indexOf(_this6.search.toLowerCase()) > -1;
+            return String(row[key]).toLowerCase().indexOf(_this7.search.toLowerCase()) > -1;
           });
         });
       }
@@ -4135,14 +4170,14 @@ __webpack_require__.r(__webpack_exports__);
 
       if (sortKey) {
         datas = datas.slice().sort(function (a, b) {
-          var index = _this6.getIndex(_this6.columns, "id", sortKey);
+          var index = _this7.getIndex(_this7.columns, "name", sortKey);
 
           a = String(a[sortKey]).toLowerCase();
           b = String(b[sortKey]).toLowerCase();
 
-          if (_this6.columns[index].type && _this6.columns[index].type === "date") {
+          if (_this7.columns[index].type && _this7.columns[index].type === "date") {
             return (a === b ? 0 : new Date(a).getTime() > new Date(b).getTime() ? 1 : -1) * order;
-          } else if (_this6.columns[index].type && _this6.columns[index].type === "number") {
+          } else if (_this7.columns[index].type && _this7.columns[index].type === "number") {
             return (+a === +b ? 0 : +a > +b ? 1 : -1) * order;
           } else {
             return (a === b ? 0 : a > b ? 1 : -1) * order;
@@ -45402,7 +45437,7 @@ var render = function() {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(datax.name))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(datax.menu))]),
+            _c("td", [_vm._v(_vm._s(datax.menu_id))]),
             _vm._v(" "),
             _c("td", [
               _c(
@@ -46909,38 +46944,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c(
-                  "h5",
-                  {
-                    staticClass: "modal-title",
-                    attrs: { id: "exampleModalLabel" }
-                  },
-                  [_vm._v("Modal title")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: {
-                      type: "button",
-                      "data-dismiss": "modal",
-                      "aria-label": "Close"
-                    },
-                    on: {
-                      click: function($event) {
-                        return _vm.closeModal()
-                      }
-                    }
-                  },
-                  [
-                    _c("span", { attrs: { "aria-hidden": "true" } }, [
-                      _vm._v("×")
-                    ])
-                  ]
-                )
-              ]),
+              _vm._m(1),
               _vm._v(" "),
               _c(
                 "form",
@@ -46957,37 +46961,65 @@ var render = function() {
                 },
                 [
                   _c("div", { staticClass: "modal-body" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.id,
+                            expression: "form.id"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "hidden" },
+                        domProps: { value: _vm.form.id },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "id", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
                     _c(
                       "div",
                       { staticClass: "form-group" },
                       [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.role_id,
-                              expression: "form.role_id"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          class: {
-                            "is-invalid": _vm.form.errors.has("role_id")
+                        _c("multiselect", {
+                          attrs: {
+                            name: "menuid",
+                            id: "ajax",
+                            label: "menu",
+                            "track-by": "menu",
+                            placeholder: "Menu ID",
+                            "open-direction": "bottom",
+                            options: _vm.countries,
+                            multiple: false,
+                            searchable: true,
+                            loading: _vm.isLoading,
+                            "internal-search": true,
+                            "clear-on-select": false,
+                            "close-on-select": false,
+                            "options-limit": 5,
+                            limit: 3,
+                            "limit-text": _vm.limitText,
+                            "max-height": 600,
+                            "show-no-results": false,
+                            "hide-selected": true,
+                            value: _vm.Gudang
                           },
-                          attrs: { type: "text", placeholder: "role id" },
-                          domProps: { value: _vm.form.role_id },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(_vm.form, "role_id", $event.target.value)
-                            }
+                          on: { "search-change": _vm.getMenuSelect },
+                          model: {
+                            value: _vm.form.menuid,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "menuid", $$v)
+                            },
+                            expression: "form.menuid"
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("has-error", {
-                          attrs: { form: _vm.form, field: "role_id" }
                         })
                       ],
                       1
@@ -47002,25 +47034,64 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.form.menuid,
-                              expression: "form.menuid"
+                              value: _vm.form.title,
+                              expression: "form.title"
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: { type: "text", placeholder: "menu id" },
-                          domProps: { value: _vm.form.menuid },
+                          class: { "is-invalid": _vm.form.errors.has("title") },
+                          attrs: {
+                            type: "text",
+                            name: "",
+                            placeholder: "Title"
+                          },
+                          domProps: { value: _vm.form.title },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
-                              _vm.$set(_vm.form, "menuid", $event.target.value)
+                              _vm.$set(_vm.form, "title", $event.target.value)
                             }
                           }
                         }),
                         _vm._v(" "),
                         _c("has-error", {
-                          attrs: { form: _vm.form, field: "menu_id" }
+                          attrs: { form: _vm.form, field: "title" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.url,
+                              expression: "form.url"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: { "is-invalid": _vm.form.errors.has("url") },
+                          attrs: { type: "text", name: "", placeholder: "URL" },
+                          domProps: { value: _vm.form.url },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "url", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "url" }
                         })
                       ],
                       1
@@ -47067,6 +47138,18 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticStyle: { "margin-bottom": "20px" } }, [
       _c("h2", [_vm._v("Laravel and VueJS Datatable from Scratch")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Modal title")]
+      )
     ])
   }
 ]

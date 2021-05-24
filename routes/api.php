@@ -41,4 +41,4 @@ Route::get('multiakses', [MenuAksesController::class, 'getDatas']);
 Route::get('multimainmenu', [MenuMainController::class, 'getDatas']);
 //Route::get('akses-menu', [AksesController::class, 'getDatas']);
 
-Route::get('cek', [MenuAksesController::class, 'cek']);
+Route::get('multiaksescek', [MenuAksesController::class, 'cek']);

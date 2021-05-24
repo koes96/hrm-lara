@@ -205,15 +205,6 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-              @click="closeModal()"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
           </div>
           <form
             @submit.prevent="simpandata()"
@@ -221,24 +212,56 @@
           >
             <div class="modal-body">
               <div class="form-group">
-                <input
-                  class="form-control"
-                  type="text"
-                  v-model="form.role_id"
-                  placeholder="role id"
-                  :class="{ 'is-invalid': form.errors.has('role_id') }"
-                />
-
-                <has-error :form="form" field="role_id"></has-error>
+                <input class="form-control" type="hidden" v-model="form.id" />
+              </div>
+              <div class="form-group">
+                <multiselect
+                  v-model="form.menuid"
+                  name="menuid"
+                  id="ajax"
+                  label="menu"
+                  track-by="menu"
+                  placeholder="Menu ID"
+                  open-direction="bottom"
+                  :options="countries"
+                  :multiple="false"
+                  :searchable="true"
+                  :loading="isLoading"
+                  :internal-search="true"
+                  :clear-on-select="false"
+                  :close-on-select="false"
+                  :options-limit="5"
+                  :limit="3"
+                  :limit-text="limitText"
+                  :max-height="600"
+                  :show-no-results="false"
+                  :hide-selected="true"
+                  :value="Gudang"
+                  @search-change="getMenuSelect"
+                >
+                </multiselect>
               </div>
               <div class="form-group">
                 <input
                   class="form-control"
+                  v-model="form.title"
                   type="text"
-                  v-model="form.menuid"
-                  placeholder="menu id"
+                  name=""
+                  placeholder="Title"
+                  :class="{ 'is-invalid': form.errors.has('title') }"
                 />
-                <has-error :form="form" field="menu_id"></has-error>
+                <has-error :form="form" field="title"></has-error>
+              </div>
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  v-model="form.url"
+                  type="text"
+                  name=""
+                  placeholder="URL"
+                  :class="{ 'is-invalid': form.errors.has('url') }"
+                />
+                <has-error :form="form" field="url"></has-error>
               </div>
             </div>
             <div class="modal-footer">
@@ -279,13 +302,15 @@ export default {
     let sortOrders = {};
     let columns = [
       { label: "id", name: "id" },
-      { label: "roleid", name: "roleid" },
-      { label: "menuid", name: "menuid" },
+      { label: "title", name: "title" },
+      { label: "url", name: "url" },
     ];
     columns.forEach((column) => {
       sortOrders[column.name] = -1;
     });
     return {
+      selectedcountries: [],
+      countries: {},
       selectedmultidatas: [],
       multidatas: {},
       isLoading: false,
@@ -311,8 +336,9 @@ export default {
       },
       form: new Form({
         id: "",
-        roleid: "",
         menuid: "",
+        title: "",
+        url: "",
       }),
     };
   },
@@ -420,11 +446,13 @@ export default {
         this.deleteItems = [];
       }
     },
-    // getDatasSelect() {
-    //   this.isLoading = true;
-    //   axios.get("api/multiselect").then(({ data }) => (this.data = data));
-    //   this.isLoading = false;
-    // },
+    getMenuSelect() {
+      this.isLoading = true;
+      axios
+        .get("api/multimainmenu")
+        .then(({ data }) => (this.countries = data));
+      this.isLoading = false;
+    },
 
     getDatas() {
       axios
@@ -437,6 +465,10 @@ export default {
         .catch((errors) => {
           console.log(errors);
         });
+
+      axios
+        .get("api/multimainmenu")
+        .then(({ data }) => (this.countries = data));
     },
     paginate(array, length, pageNumber) {
       this.pagination.from = array.length ? (pageNumber - 1) * length + 1 : " ";
@@ -480,7 +512,7 @@ export default {
       let order = this.sortOrders[sortKey] || 1;
       if (sortKey) {
         datas = datas.slice().sort((a, b) => {
-          let index = this.getIndex(this.columns, "id", sortKey);
+          let index = this.getIndex(this.columns, "name", sortKey);
           a = String(a[sortKey]).toLowerCase();
           b = String(b[sortKey]).toLowerCase();
           if (this.columns[index].type && this.columns[index].type === "date") {
