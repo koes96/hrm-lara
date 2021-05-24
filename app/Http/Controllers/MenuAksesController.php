@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MenuAkses;
 use App\Models\MenuMain;
+use App\Models\SubMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -94,7 +95,7 @@ class MenuAksesController extends Controller
         foreach ($querys as $key1 => $value1) {
             foreach ($value1->menu_id as $key2 => $value2) {
                 foreach ($value2 as $key3 => $value3) {
-                    $value3->submenu = MenuMain::select('id', 'menu')->where('id', $value3->id)->get();
+                    $value3->submenu = SubMenu::select('id', 'title', 'url')->where('menu_id', $value3->id)->get();
                 }
             }
         }
