@@ -13,32 +13,6 @@
           Add Data
         </button>
       </div>
-
-      <div class="form-group">
-        <multiselect
-          v-model="selectedmultidatas"
-          id="ajax"
-          label="name"
-          track-by="id"
-          placeholder="Type to search"
-          open-direction="bottom"
-          :options="multidatas"
-          :multiple="true"
-          :searchable="true"
-          :loading="isLoading"
-          :internal-search="true"
-          :clear-on-select="false"
-          :close-on-select="false"
-          :options-limit="5"
-          :limit="3"
-          :limit-text="limitText"
-          :max-height="600"
-          :show-no-results="false"
-          :hide-selected="true"
-          @search-change="getDatasSelect"
-        >
-        </multiselect>
-      </div>
       <input
         class="form-control input"
         type="text"
@@ -123,7 +97,7 @@
             <!-- <a class="btn btn-primary btn-sm radius-15" @click="deleteUser(user.id)">Delete User</a> -->
             <button
               class="btn btn-primary btn-sm radius-15"
-              @click="deleteDatas(user.id)"
+              @click="deleteDatasSubMenu(user.id)"
             >
               <!-- -->
               Delete
@@ -229,15 +203,15 @@
                   :loading="isLoading"
                   :internal-search="true"
                   :clear-on-select="false"
-                  :close-on-select="false"
+                  :close-on-select="true"
                   :options-limit="5"
                   :limit="3"
                   :limit-text="limitText"
                   :max-height="600"
                   :show-no-results="false"
                   :hide-selected="true"
-                  :value="Gudang"
                   @search-change="getMenuSelect"
+                  @change="getMenuSelect"
                 >
                 </multiselect>
               </div>
@@ -321,7 +295,7 @@ export default {
       length: 10,
       search: "",
       all_select: false,
-      deleteDatas: [],
+      deleteDatasSubMenu: [],
       select: "",
       tableShow: {
         showdata: true,
@@ -360,16 +334,29 @@ export default {
     simpandata() {
       this.loading = true;
       this.disabled = true;
-      this.form
-        .post("api/menu")
-        .then(() => {
-          Fire.$emit("reloadDatas");
-          this.closeModal();
-          Swal.fire("Created!", "Data is Saved", "success");
-          this.loading = false;
-          this.disabled = false;
-        })
-        .catch();
+      if (this.form.id == "") {
+        this.form
+          .post("api/sub-menu")
+          .then(() => {
+            Fire.$emit("reloadDatas");
+            this.closeModal();
+            Swal.fire("Created!", "Data is Saved", "success");
+            this.loading = true;
+            this.disabled = true;
+          })
+          .catch();
+      } else {
+        this.form
+          .put("api/sub-menu/" + this.form.id)
+          .then(() => {
+            Fire.$emit("reloadDatas");
+            this.closeModal();
+            Swal.fire("Update!", "Data is Update", "success");
+            this.loading = true;
+            this.disabled = true;
+          })
+          .catch();
+      }
     },
     edit(id, roleid, menuid) {
       this.showModal();
@@ -456,7 +443,7 @@ export default {
 
     getDatas() {
       axios
-        .get("api/akses-menu/", { params: this.tableShow })
+        .get("api/sub-menu/", { params: this.tableShow })
         .then((response) => {
           console.log("The data: ", response.data);
           this.datas = response.data;

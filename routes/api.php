@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\MenuAksesController;
 use App\Http\Controllers\MenuMainController;
+use App\Http\Controllers\SubMenuController;
 use App\Models\MenuMain;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,9 @@ Route::apiResources([
 ]);
 Route::apiResources([
     'main-menu' => MenuMainController::class,
+]);
+Route::apiResources([
+    'sub-menu' => SubMenuController::class,
 ]);
 
 //multi Delete

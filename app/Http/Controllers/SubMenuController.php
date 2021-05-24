@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class SubMenuController extends Controller
 {
@@ -12,9 +14,31 @@ class SubMenuController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->input('showdata')) {
+            $querys = SubMenu::select('id', 'menu_id', 'title', 'url')
+                ->get();
+
+            return $querys;
+        }
+        $colums = ['id', 'menu_id', 'title', 'url'];
+        $lenght = $request->input('length');
+        $column = $request->input('column');
+        $search_input = $request->input('search');
+
+        $query = SubMenu::select('id', 'menu_id', 'title', 'url')
+            ->orderBy($colums[$column])
+            ->get();
+
+        if ($search_input) {
+            $query->where(function ($query) use ($search_input) {
+                $query->where('id', 'like', '%' . $search_input . '%')->orwhere('url', 'like', '%' . $search_input . '%')->orwhere('title', 'like', '%' . $search_input . '%');
+            });
+        }
+
+        $users = $query->paginate($lenght);
+        return ['data' => $users];
     }
 
     /**
@@ -33,9 +57,27 @@ class SubMenuController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, SubMenu $subMenu)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            // 'id' => 'required|string|max:50',
+            'title' => 'required|string|max:50',
+            'url' => 'required|string|max:50',
+        ]);
+
+        //response error validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $subMenu::Create(
+            [
+                'id' => Str::uuid(),
+                'menu_id' => $request->menuid['id'],
+                'title' => $request->title,
+                'url' => $request->url
+            ]
+        );
     }
 
     /**

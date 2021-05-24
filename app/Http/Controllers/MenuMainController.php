@@ -39,7 +39,7 @@ class MenuMainController extends Controller
 
     public function getDatas()
     {
-        return MenuMain::all();
+        return MenuMain::select('id', 'judul', 'menu')->get();
     }
 
     /**

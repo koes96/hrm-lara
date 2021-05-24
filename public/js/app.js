@@ -3908,32 +3908,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
  //import { ajaxFindCountry } from './countriesApi'
 // let ajaxFindCountry = "api/user/";
 
@@ -3977,7 +3951,7 @@ __webpack_require__.r(__webpack_exports__);
       length: 10,
       search: "",
       all_select: false,
-      deleteDatas: [],
+      deleteDatasSubMenu: [],
       select: "",
       tableShow: {
         showdata: true
@@ -4018,15 +3992,28 @@ __webpack_require__.r(__webpack_exports__);
 
       this.loading = true;
       this.disabled = true;
-      this.form.post("api/menu").then(function () {
-        Fire.$emit("reloadDatas");
 
-        _this2.closeModal();
+      if (this.form.id == "") {
+        this.form.post("api/sub-menu").then(function () {
+          Fire.$emit("reloadDatas");
 
-        Swal.fire("Created!", "Data is Saved", "success");
-        _this2.loading = false;
-        _this2.disabled = false;
-      })["catch"]();
+          _this2.closeModal();
+
+          Swal.fire("Created!", "Data is Saved", "success");
+          _this2.loading = true;
+          _this2.disabled = true;
+        })["catch"]();
+      } else {
+        this.form.put("api/sub-menu/" + this.form.id).then(function () {
+          Fire.$emit("reloadDatas");
+
+          _this2.closeModal();
+
+          Swal.fire("Update!", "Data is Update", "success");
+          _this2.loading = true;
+          _this2.disabled = true;
+        })["catch"]();
+      }
     },
     edit: function edit(id, roleid, menuid) {
       this.showModal();
@@ -4114,7 +4101,7 @@ __webpack_require__.r(__webpack_exports__);
     getDatas: function getDatas() {
       var _this6 = this;
 
-      axios.get("api/akses-menu/", {
+      axios.get("api/sub-menu/", {
         params: this.tableShow
       }).then(function (response) {
         console.log("The data: ", response.data);
@@ -46475,44 +46462,6 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "form-group" },
-        [
-          _c("multiselect", {
-            attrs: {
-              id: "ajax",
-              label: "name",
-              "track-by": "id",
-              placeholder: "Type to search",
-              "open-direction": "bottom",
-              options: _vm.multidatas,
-              multiple: true,
-              searchable: true,
-              loading: _vm.isLoading,
-              "internal-search": true,
-              "clear-on-select": false,
-              "close-on-select": false,
-              "options-limit": 5,
-              limit: 3,
-              "limit-text": _vm.limitText,
-              "max-height": 600,
-              "show-no-results": false,
-              "hide-selected": true
-            },
-            on: { "search-change": _vm.getDatasSelect },
-            model: {
-              value: _vm.selectedmultidatas,
-              callback: function($$v) {
-                _vm.selectedmultidatas = $$v
-              },
-              expression: "selectedmultidatas"
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
       _c("input", {
         directives: [
           {
@@ -46778,7 +46727,7 @@ var render = function() {
                   staticClass: "btn btn-primary btn-sm radius-15",
                   on: {
                     click: function($event) {
-                      return _vm.deleteDatas(user.id)
+                      return _vm.deleteDatasSubMenu(user.id)
                     }
                   }
                 },
@@ -47003,16 +46952,18 @@ var render = function() {
                             loading: _vm.isLoading,
                             "internal-search": true,
                             "clear-on-select": false,
-                            "close-on-select": false,
+                            "close-on-select": true,
                             "options-limit": 5,
                             limit: 3,
                             "limit-text": _vm.limitText,
                             "max-height": 600,
                             "show-no-results": false,
-                            "hide-selected": true,
-                            value: _vm.Gudang
+                            "hide-selected": true
                           },
-                          on: { "search-change": _vm.getMenuSelect },
+                          on: {
+                            "search-change": _vm.getMenuSelect,
+                            change: _vm.getMenuSelect
+                          },
                           model: {
                             value: _vm.form.menuid,
                             callback: function($$v) {
