@@ -24,7 +24,11 @@ class DatabaseSeeder extends Seeder
                 'role_id' => '2',
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('admin1234'),
+<<<<<<< HEAD
                 'name' => 'admin1234'
+=======
+                'name' => 'Admin'
+>>>>>>> c4d717fc036442da8b3f1148ad55aa619dddf900
             ]
         ]);
     }

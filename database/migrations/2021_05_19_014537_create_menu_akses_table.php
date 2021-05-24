@@ -15,8 +15,8 @@ class CreateMenuAksesTable extends Migration
     {
         Schema::create('menu_akses', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('role_id', '32');
-            $table->char('menu_id', '32');
+            $table->char('role_id', '36');
+            $table->text('menu_id');
             $table->timestamps();
         });
     }

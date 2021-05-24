@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class MenuAksesController extends Controller
 {
@@ -16,6 +17,7 @@ class MenuAksesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request)
     {
         if ($request->input('showdata')) {
@@ -75,6 +77,7 @@ class MenuAksesController extends Controller
     public function cek(Request $request)
     {
         $x = array();
+<<<<<<< HEAD
         $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
             ->join('users', 'users.name', '=', 'menu_akses.role_id')
             ->get();
@@ -97,6 +100,12 @@ class MenuAksesController extends Controller
             }
         }
         echo json_encode($querys);
+=======
+        // $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
+        $query = DB::table('menu_akses')->join('users', 'users.id', '=', 'menu_akses.role_id')
+            ->get();
+        echo json_encode($query);
+>>>>>>> c4d717fc036442da8b3f1148ad55aa619dddf900
     }
 
     /**

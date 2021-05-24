@@ -55,7 +55,7 @@
 				</li>
 			</ul>
 		</li>
-		@foreach ($akses as $v)
+		{{-- @foreach ($akses as $v)
 		<li class="menu-label">{{$v->judul}}</li>
 		<li>
 			<a href="javascript:;" class="has-arrow">
@@ -70,7 +70,7 @@
 				@endforeach
 			</ul>
 		</li>
-		@endforeach
+		@endforeach --}}
 	</ul>
 	<!--end navigation-->
 </div>

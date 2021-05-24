@@ -25,12 +25,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $akses = MenuAkses::join('menu_mains', 'menu_mains.id', '=', 'menu_akses.menu_id')->select('menu_akses.*', 'menu_mains.judul', 'menu_mains.menu')->get();
-        $sub = MenuMain::join('sub_menus', 'sub_menus.menu_id', '=', 'menu_mains.menu')->select('sub_menus.*', 'menu_mains.judul', 'menu_mains.menu')->get();
-        return view('home', [
-            'akses' => $akses,
-            'sub' => $sub
-        ]);
-        // return view('home');
+        // $akses = MenuAkses::join('menu_mains', 'menu_mains.id', '=', 'menu_akses.menu_id')->select('menu_akses.*', 'menu_mains.judul', 'menu_mains.menu')->get();
+        // $sub = MenuMain::join('sub_menus', 'sub_menus.menu_id', '=', 'menu_mains.menu')->select('sub_menus.*', 'menu_mains.judul', 'menu_mains.menu')->get();
+        // return view('home', [
+        //     'akses' => $akses,
+        //     'sub' => $sub
+        // ]);
+        return view('home');
     }
 }
