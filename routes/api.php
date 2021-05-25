@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuAksesController;
 use App\Http\Controllers\MenuMainController;
 use App\Http\Controllers\SubMenuController;

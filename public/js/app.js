@@ -2795,6 +2795,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
  //import { ajaxFindCountry } from './countriesApi'
 // let ajaxFindCountry = "api/user/";
 
@@ -45378,88 +45382,106 @@ var render = function() {
       _c(
         "tbody",
         _vm._l(_vm.paginatedDatas, function(datax) {
-          return _c("tr", { key: datax.idakses }, [
-            _c("td", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.deleteDatas,
-                    expression: "deleteDatas"
-                  }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  value: "" + datax.idakses,
-                  checked: Array.isArray(_vm.deleteDatas)
-                    ? _vm._i(_vm.deleteDatas, "" + datax.idakses) > -1
-                    : _vm.deleteDatas
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.deleteDatas,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = "" + datax.idakses,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 && (_vm.deleteDatas = $$a.concat([$$v]))
+          return _c(
+            "tr",
+            { key: datax.idakses },
+            [
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.deleteDatas,
+                      expression: "deleteDatas"
+                    }
+                  ],
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    value: "" + datax.idakses,
+                    checked: Array.isArray(_vm.deleteDatas)
+                      ? _vm._i(_vm.deleteDatas, "" + datax.idakses) > -1
+                      : _vm.deleteDatas
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.deleteDatas,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = "" + datax.idakses,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.deleteDatas = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.deleteDatas = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
                       } else {
-                        $$i > -1 &&
-                          (_vm.deleteDatas = $$a
-                            .slice(0, $$i)
-                            .concat($$a.slice($$i + 1)))
+                        _vm.deleteDatas = $$c
                       }
-                    } else {
-                      _vm.deleteDatas = $$c
                     }
                   }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(datax.idakses))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(datax.name))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(datax.menu_id))]),
-            _vm._v(" "),
-            _c("td", [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-sm radius-15",
-                  on: {
-                    click: function($event) {
-                      return _vm.deleteData(datax.idakses)
-                    }
-                  }
-                },
-                [_vm._v("\n            Delete Datas\n          ")]
-              ),
+                })
+              ]),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-info btn-sm radius-15",
-                  on: {
-                    click: function($event) {
-                      _vm.edit(
-                        datax.idakses,
-                        (_vm.Namas.name = datax.name),
-                        (_vm.Namas.id = datax.iduser),
-                        (_vm.Gudang.id = datax.idmains),
-                        (_vm.Gudang.menu = datax.menu)
+              _c("td", [_vm._v(_vm._s(datax.idakses))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(datax.name))]),
+              _vm._v(" "),
+              _vm._l(datax.menu_id, function(menus) {
+                return _c(
+                  "di",
+                  { key: menus },
+                  _vm._l(menus, function(men) {
+                    return _c("td", { key: men.id }, [
+                      _vm._v(
+                        "\n            " + _vm._s(men.menu) + "\n          "
                       )
+                    ])
+                  }),
+                  0
+                )
+              }),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-sm radius-15",
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteData(datax.idakses)
+                      }
                     }
-                  }
-                },
-                [_vm._v("\n            Edit Data\n          ")]
-              )
-            ])
-          ])
+                  },
+                  [_vm._v("\n            Delete Datas\n          ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-info btn-sm radius-15",
+                    on: {
+                      click: function($event) {
+                        _vm.edit(
+                          datax.idakses,
+                          (_vm.Namas.name = datax.name),
+                          (_vm.Namas.id = datax.iduser),
+                          (_vm.Gudang.id = datax.idmains),
+                          (_vm.Gudang.menu = datax.menu)
+                        )
+                      }
+                    }
+                  },
+                  [_vm._v("\n            Edit Data\n          ")]
+                )
+              ])
+            ],
+            2
+          )
         }),
         0
       )

@@ -77,10 +77,10 @@ class MenuAksesController extends Controller
 
     public function cek()
     {
-        $id = Auth::id();
+        // $id = Auth::id();
         $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
             ->join('users', 'users.id', '=', 'menu_akses.role_id')
-            ->where('users.id', '=', $id)
+            // ->where('users.id', '=', $id)
             ->get();
         foreach ($querys as $key => $value) {
             $exp = explode(",", $value->menu_id);

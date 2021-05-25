@@ -80,7 +80,11 @@
           </td>
           <td>{{ datax.idakses }}</td>
           <td>{{ datax.name }}</td>
-          <td>{{ datax.menu_id }}</td>
+          <di v-for="menus in datax.menu_id" :key="menus">
+            <td v-for="men in menus" :key="men.id">
+              {{ men.menu }}
+            </td>
+          </di>
           <td>
             <!-- <a class="btn btn-primary btn-sm radius-15" @click="deleteUser(user.id)">Delete User</a> -->
             <button
