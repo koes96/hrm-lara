@@ -7,6 +7,7 @@ use App\Models\MenuMain;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -28,9 +29,11 @@ class HomeController extends Controller
     public function index()
     {
         $id = Auth::id();
-        $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
-            ->join('users', 'users.id', '=', 'menu_akses.role_id')
-            ->where('users.id', '=', $id)
+        // $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
+        //     ->join('users', 'users.id', '=', 'menu_akses.role_id')
+        // ->where('users.id', '=', $id)
+        $querys = DB::table('join_users_ke_menu_akses')
+            ->where('iduser', '=', $id)
             ->get();
         foreach ($querys as $key => $value) {
             $exp = explode(",", $value->menu_id);

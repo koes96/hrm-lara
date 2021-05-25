@@ -15,6 +15,6 @@ class MenuAkses extends Model
         'menu_id'
     ];
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    public $keyType = 'string';
+    // public $incrementing = false;
 }

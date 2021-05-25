@@ -6,10 +6,9 @@ use App\Models\MenuAkses;
 use App\Models\MenuMain;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class MenuAksesController extends Controller
 {
@@ -22,8 +21,10 @@ class MenuAksesController extends Controller
     public function index(Request $request)
     {
         if ($request->input('showdata')) {
-            $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
-                ->join('users', 'users.id', '=', 'menu_akses.role_id')
+            // $querys = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name')
+            //     ->join('users', 'users.id', '=', 'menu_akses.role_id')
+            //     ->get();
+            $querys = DB::table('join_users_ke_menu_akses')
                 ->get();
 
             foreach ($querys as $key => $value) {
@@ -54,9 +55,10 @@ class MenuAksesController extends Controller
         $column = $request->input('column');
         $search_input = $request->input('search');
 
-        $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name', 'menu_mains.id as idmains', 'menu_mains.menu', 'menu_mains.id')
-            ->join('users', 'users.id', '=', 'menu_akses.role_id')
-            ->join('menu_mains', 'menu_mains.id', '=', 'menu_akses.menu_id')
+        // $query = MenuAkses::select('menu_akses.id as idakses', 'menu_akses.role_id', 'menu_akses.menu_id', 'users.id as iduser', 'users.name', 'menu_mains.id as idmains', 'menu_mains.menu', 'menu_mains.id')
+        //     ->join('users', 'users.id', '=', 'menu_akses.role_id')
+        //     ->join('menu_mains', 'menu_mains.id', '=', 'menu_akses.menu_id')
+        $query = DB::table('join_menu_akses_users_menu_mains')
             ->orderBy($colums[$column])
             ->get();
 
@@ -138,7 +140,7 @@ class MenuAksesController extends Controller
 
         $menuAkses::Create(
             [
-                'id' => Str::uuid(),
+                // 'id' => Str::uuid(),
                 'role_id' => $request->role_id['id'],
                 'menu_id' => $menu,
             ]

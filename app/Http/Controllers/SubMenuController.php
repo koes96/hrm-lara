@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class SubMenuController extends Controller
 {
@@ -72,7 +71,7 @@ class SubMenuController extends Controller
 
         $subMenu::Create(
             [
-                'id' => Str::uuid(),
+                // 'id' => Str::uuid(),
                 'menu_id' => $request->menuid['id'],
                 'title' => $request->title,
                 'url' => $request->url

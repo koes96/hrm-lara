@@ -16,6 +16,6 @@ class SubMenu extends Model
         'url'
     ];
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    public $keyType = 'string';
+    // public $incrementing = false;
 }

@@ -15,7 +15,7 @@ class CreateSubMenusTable extends Migration
     {
         Schema::create('sub_menus', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('menu_id', '32');
+            $table->char('menu_id', '36');
             $table->string('title', '30');
             $table->string('url', '25');
             $table->timestamps();

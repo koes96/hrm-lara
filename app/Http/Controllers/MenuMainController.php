@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\MenuMain;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
 class MenuMainController extends Controller
@@ -72,7 +71,7 @@ class MenuMainController extends Controller
 
         $menuMain::Create(
             [
-                'id' => Str::uuid(),
+                // 'id' => Str::uuid(),
                 'menu' => $request->menu,
                 'judul' => $request->judul,
                 'icon' => $request->icon,

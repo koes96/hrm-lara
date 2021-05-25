@@ -16,6 +16,6 @@ class MenuMain extends Model
         'icon'
     ];
 
-    protected $keyType = 'string';
-    public $incrementing = false;
+    public $keyType = 'string';
+    // public $incrementing = false;
 }

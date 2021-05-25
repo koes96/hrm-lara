@@ -43,6 +43,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $keyType = 'string';
+    public $keyType = 'string';
     public $incrementing = false;
 }
